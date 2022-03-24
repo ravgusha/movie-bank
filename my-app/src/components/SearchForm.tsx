@@ -2,13 +2,13 @@ import { Component } from 'react';
 import './SearchForm.scss';
 
 class Searchform extends Component {
-
   render() {
-      return (
-          <input type="text"
-                  className="search-form"
-                  placeholder="Search..."/>
-      )
+    return (
+      <form className="search-form">
+        <input className='search-form__input' type="text" placeholder="Search for movie..." />
+        <button className='search-form__button'>Search</button>
+      </form>
+    );
   }
 }
 
