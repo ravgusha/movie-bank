@@ -1,7 +1,9 @@
+import Searchform from "../components/SearchForm";
+
 const Homepage = () => {
     return (
         <div>
-            <h1>Get started with React-Router 6</h1>
+            <Searchform></Searchform>
         </div>
     )
 }

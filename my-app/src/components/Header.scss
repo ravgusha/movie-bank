@@ -1,0 +1,22 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  font-size: 25px;
+}
+
+.header__logo {
+  color: #6935fd;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.header__links {
+  display: flex;
+  justify-content: space-between;
+
+  a {
+    text-decoration: none;
+    padding-right: 20px;
+  }
+}
