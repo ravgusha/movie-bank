@@ -5,9 +5,9 @@ import './MainText.scss';
 class MainText extends Component {
   render() {
     return (
-      <div className='container__text'>
-        <h1 className='container__title'>Find Your Perfect Movie</h1>
-        <p className='container__description'>For all those movie therapy lovers, we have gathered the best of the best in every genre.<br />Here we go!
+      <div className='main-text'>
+        <h1 className='main-text__title'>Find Your Perfect Movie</h1>
+        <p className='main-textr__description'>For all those movie therapy lovers, we have gathered the best of the best in every genre.<br />Here we go!
         </p>
       </div>
     );
