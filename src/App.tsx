@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.scss';
-import Header from './components/Header';
-import MainText from './components/MainText';
-import SearchForm from './components/SearchForm';
-import CardList from './components/CardList';
+import Header from './components/Header/Header';
+import MainText from './components/MainText/MainText';
+import SearchForm from './components/SearchForm/SearchForm';
+import CardList from './components/CardList/CardList';
 import { Notfoundpage } from './pages/Notfoundpage';
 import { Homepage } from './pages/Homepage';
 import { Aboutpage } from './pages/Aboutpage';

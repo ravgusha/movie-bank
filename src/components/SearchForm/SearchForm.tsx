@@ -2,32 +2,38 @@ import { Component } from 'react';
 import './SearchForm.scss';
 
 // Подправить?
-type MyProps = {
-  list?: string[]
+interface MyProps {
+  list?: string[];
 }
-
-type MyState = { inputValue: string };
+interface MyState {
+  inputValue: string;
+}
 class SearchForm extends Component<MyProps, MyState> {
   constructor(props: MyProps) {
     super(props);
     this.state = {
-      inputValue: localStorage.getItem("inputValue") || ""
+      inputValue: localStorage.getItem('inputValue') || '',
     };
   }
 
   onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value;
 
-    localStorage.setItem("inputValue", inputValue);
+    localStorage.setItem('inputValue', inputValue);
     this.setState({ inputValue });
   };
-  
 
   render() {
     return (
       <form className="search-form">
-        <input className='search-form__input' type="text" placeholder="Search for movie..." value={this.state.inputValue} onChange={this.onChange} />
-        <button className='search-form__button'>Search</button>
+        <input
+          className="search-form__input"
+          type="text"
+          placeholder="Search for movie..."
+          value={this.state.inputValue}
+          onChange={this.onChange}
+        />
+        <button className="search-form__button">Search</button>
       </form>
     );
   }

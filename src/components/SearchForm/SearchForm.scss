@@ -6,13 +6,13 @@
   margin: 40px auto;
   display: flex;
   flex-direction: row;
-  box-shadow: 0 0 5pt 0.5pt #d3d3d3;
+  box-shadow: 0 0 7px 1px #d3d3d3;
 
   input {
     flex-grow: 2;
     border: none;
     font-family: 'Montserrat', sans-serif;
-    background: url(../../public/search.svg) no-repeat scroll 7px 25px;
+    background: url(../../../public/search.svg) no-repeat scroll 7px 25px;
     // border: 1px solid #616161;
     border-radius: 10px;
     padding-left: 45px;
