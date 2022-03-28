@@ -36,11 +36,11 @@ const data = [
 
 class CardList extends Component {
   cards = data.map((item) => {
-    return <CardItem key={item.id} {...item} />;
+    return <CardItem data-testid="card" key={item.id} {...item} />;
   });
 
   render() {
-    return <div className="cards">{this.cards}</div>;
+    return <ul data-testid="cards" className="cards">{this.cards}</ul>;
   }
 }
 

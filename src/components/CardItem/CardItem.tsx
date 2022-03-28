@@ -11,11 +11,11 @@ type Card = {
 class CardItem extends Component<Card> {
   render() {
     return (
-      <div className="card">
+      <li className="card">
         <img className="card__img" src={this.props.posterUrl} />
         <h3 className="card__title">{this.props.title}</h3>
         <p className="card__genre">{this.props.genre}</p>
-      </div>
+      </li>
     );
   }
 }
