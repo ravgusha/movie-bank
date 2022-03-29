@@ -18,15 +18,29 @@ class SearchForm extends Component<MyProps, MyState> {
 
   onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value;
-
-    localStorage.setItem('inputValue', inputValue);
     this.setState({ inputValue });
   };
+
+  componentDidMount() {
+    this.setState({
+      inputValue: localStorage.getItem('inputValue') || '',
+    });
+  }
+
+  componentDidUpdate() {
+    const input = document.querySelector('.search-form__input') as HTMLInputElement;
+    let inputValue = '';
+    if (input) {
+      inputValue = input.value;
+    }
+    localStorage.setItem('inputValue', inputValue);
+  }
 
   render() {
     return (
       <form className="search-form">
-        <input data-testid="input"
+        <input
+          data-testid="input"
           className="search-form__input"
           type="text"
           placeholder="Search for movie..."
