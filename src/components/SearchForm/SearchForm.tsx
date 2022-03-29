@@ -14,6 +14,11 @@ class SearchForm extends Component<MyProps, MyState> {
     this.state = {
       inputValue: localStorage.getItem('inputValue') || '',
     };
+    this.componentCleanup = this.componentCleanup.bind(this);
+  }
+
+  componentCleanup() {
+    localStorage.setItem('inputValue', this.state.inputValue);
   }
 
   onChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -22,18 +27,15 @@ class SearchForm extends Component<MyProps, MyState> {
   };
 
   componentDidMount() {
+    window.addEventListener('beforeunload', this.componentCleanup);
     this.setState({
       inputValue: localStorage.getItem('inputValue') || '',
     });
   }
 
-  componentDidUpdate() {
-    const input = document.querySelector('.search-form__input') as HTMLInputElement;
-    let inputValue = '';
-    if (input) {
-      inputValue = input.value;
-    }
-    localStorage.setItem('inputValue', inputValue);
+  componentWillUnmount() {
+    this.componentCleanup();
+    window.removeEventListener('beforeunload', this.componentCleanup);
   }
 
   render() {
