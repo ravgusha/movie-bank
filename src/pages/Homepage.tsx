@@ -1,8 +1,15 @@
-const Homepage = () => {
-    return (
-        <div>
-        </div>
-    )
-}
+import MainText from '../components/MainText/MainText';
+import SearchForm from '../components/SearchForm/SearchForm';
+import CardList from '../components/CardList/CardList';
 
-export {Homepage}
+const Homepage = () => {
+  return (
+    <div>
+      <MainText></MainText>
+      <SearchForm></SearchForm>
+      <CardList></CardList>
+    </div>
+  );
+};
+
+export { Homepage };
