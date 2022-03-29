@@ -2,14 +2,14 @@ import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
 import CardList from '../components/CardList/CardList';
 
-const Homepage = () => {
+const HomePage = () => {
   return (
     <div>
-      <MainText></MainText>
-      <SearchForm></SearchForm>
-      <CardList></CardList>
+      <MainText />
+      <SearchForm />
+      <CardList />
     </div>
   );
 };
 
-export { Homepage };
+export { HomePage };
