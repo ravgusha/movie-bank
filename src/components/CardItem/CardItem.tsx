@@ -1,12 +1,12 @@
 import { Component } from 'react';
 import './CardItem.scss';
 
-type Card = {
+export type Card = {
   posterUrl: string;
   title: string;
   genres: string[];
   id: number;
-  date: string;
+  date: number;
   country: string;
   ageLimit: boolean;
 };
