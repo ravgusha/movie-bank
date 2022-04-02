@@ -5,7 +5,11 @@ import data from '../../data';
 interface MyProps {
   list?: string;
 }
-class CardAddForm extends Component<MyProps> {
+
+interface MyState {
+    card: [];
+}
+class CardAddForm extends Component<MyProps, MyState> {
   private title: React.RefObject<HTMLInputElement>;
   private date: React.RefObject<HTMLInputElement>;
   private country: React.LegacyRef<HTMLSelectElement>;
@@ -28,14 +32,25 @@ class CardAddForm extends Component<MyProps> {
 
   handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(this.title.current.value);
 
-    const d = new Date(this.date.current.value).getFullYear();
-    console.log(d);
+    if (!this.title.current) {
+        console.log('error');
+        return;
+    }
 
-    console.log(this.country.current.value);
-    console.log(this.ageLimit.current.checked);
-    console.log(this.posterUrl.files[0]);
+    this.state 
+
+
+
+
+    // console.log(this.title.current.value);
+
+    // const d = new Date(this.date.current.value).getFullYear();
+    // console.log(d);
+
+    // console.log(this.country.current.value);
+    // console.log(this.ageLimit.current.checked);
+    // console.log(this.posterUrl.files[0]);
   };
 
   render() {
