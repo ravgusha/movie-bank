@@ -18,7 +18,7 @@ class CardAddForm extends Component<MyProps, MyState> {
   private date: React.RefObject<HTMLInputElement>;
   private country: React.RefObject<HTMLSelectElement>;
   private ageLimit: React.RefObject<HTMLInputElement>;
-  private genres: string[];
+  private genres: React.RefObject<HTMLFormElement>;
   private posterUrl: React.RefObject<HTMLInputElement>;
 
   constructor(props: MyProps) {
@@ -33,7 +33,7 @@ class CardAddForm extends Component<MyProps, MyState> {
     this.country = createRef();
     this.ageLimit = createRef();
     this.posterUrl = createRef();
-    this.genres = [];
+    this.genres = createRef();
   }
 
   handleTitleChange = () => {
@@ -44,21 +44,20 @@ class CardAddForm extends Component<MyProps, MyState> {
     this.setState({ errors: { ...this.state.errors, date: '' } });
   };
 
-  handleGenresChange = (e: React.FormEvent) => {
-    const item = e.target as HTMLInputElement;
-    if (item) {
-      if (item.checked) this.genres.push(item.value);
-      else {
-        const index = this.genres.indexOf(item.value);
-        this.genres.splice(index, 1);
-      }
-      console.log(this.genres);
-    }
+  handlePosterChange = () => {
+    this.setState({ errors: { ...this.state.errors, posterUrl: '' } });
   };
 
   handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    
+
+    // Get checked checkboxes
+    let { genre } = this.genres;
+    const checkboxArray = Array.prototype.slice.call(genre);
+    const checkedCheckboxes = checkboxArray.filter(input => input.checked);
+    genre = checkedCheckboxes.map(input => input.value);
+    console.log("checked array values:", genre);
+
     let isError = false;
     const errors: FieldsError = {
       title: '',
@@ -79,10 +78,15 @@ class CardAddForm extends Component<MyProps, MyState> {
       errors.date = 'Date error';
     }
 
-    if (!this.genres?.length) {
+    if (!genre.length) {
       isError = true;
       errors.genres = 'Genres error';
     }
+
+    if (!this.posterUrl) {
+        isError = true;
+        errors.posterUrl = 'posterUrl error';
+      }
 
     this.setState({ errors });
 
@@ -92,8 +96,8 @@ class CardAddForm extends Component<MyProps, MyState> {
           ...this.state.cards,
           {
             title: this.title.current?.value ?? '',
-            posterUrl: '/url',
-            genres: this.genres,
+            posterUrl: URL.createObjectURL(this.posterUrl.current.files[0]),
+            genres: genre,
             id: 1,
             country: this.country.current?.value ?? '',
             date: new Date(this.date.current.value).getFullYear(),
@@ -107,7 +111,7 @@ class CardAddForm extends Component<MyProps, MyState> {
   render() {
     return (
       <>
-        <form className="add-form" id="createCardCont" onSubmit={this.handleSubmit}>
+        <form className="add-form" id="createCardCont" onSubmit={this.handleSubmit} ref={form => (this.genres = form)}>
           <div className="add-form__title">
             <label htmlFor="addTitle">Title: </label>
             <input type="text" id="addTitle" ref={this.title} onChange={this.handleTitleChange} />
@@ -133,52 +137,22 @@ class CardAddForm extends Component<MyProps, MyState> {
             </label>
           </div>
           <div
-            className="add-form__genre"
-            onChange={(e) => this.handleGenresChange(e)}
-            // ref={this.genres}
-          >
+            className="add-form__genre">
             <span className="genre__title">Genres: </span>
             <div>{this.state.errors.genres}</div>
-            <label htmlFor="action">
-              <input type="checkbox" id="action" value="action" />
-              Action
-            </label>
-            <label htmlFor="comedy">
-              <input type="checkbox" id="comedy" value="comedy" />
-              Comedy
-            </label>
-            <label htmlFor="drama">
-              <input type="checkbox" id="drama" value="drama" />
-              Drama
-            </label>
-            <label htmlFor="fantasy">
-              <input type="checkbox" id="fantasy" value="fantasy" />
-              Fantasy
-            </label>
-            <label htmlFor="horror">
-              <input type="checkbox" id="horror" value="horror" />
-              Horror
-            </label>
-            <label htmlFor="mystery">
-              <input type="checkbox" id="mystery" value="mystery" />
-              Mystery
-            </label>
-            <label htmlFor="romance">
-              <input type="checkbox" id="romance" value="romance" />
-              Romance
-            </label>
-            <label htmlFor="thriller">
-              <input type="checkbox" id="thriller" value="thriller" />
-              Thriller
-            </label>
-            <label htmlFor="western">
-              <input type="checkbox" id="western" value="western" />
-              Western
-            </label>
+            <CheckboxSet setName={"genre"} setOptions={["action", "comedy", "drama", 'fantasy', 'horror', "mystery", "romance", "thriller", "western"]} />
           </div>
           <div className="add-form__img">
+          <div>{this.state.errors.posterUrl}</div>
             <label htmlFor="fileUpload">Add poster</label>
-            <input type="file" id="fileUpload" title=" " ref={this.posterUrl} />
+            <input
+              type="file"
+              id="fileUpload"
+              title=" "
+              accept="image/jpeg"
+              ref={this.posterUrl}
+              onChange={this.handlePosterChange}
+            />
           </div>
           <input type="submit" />
         </form>
@@ -191,5 +165,21 @@ class CardAddForm extends Component<MyProps, MyState> {
     );
   }
 }
+
+
+function CheckboxSet(props: { setOptions: string[]; setName: string }) {
+    return (
+      <div>
+        {props.setOptions.map(option => {
+          return (
+            <label key={option} style={{ textTransform: "capitalize" }}>
+              <input type="checkbox" value={option} name={props.setName} />
+              {option}
+            </label>
+          );
+        })}
+      </div>
+    );
+  }
 
 export default CardAddForm;
