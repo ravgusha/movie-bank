@@ -25,6 +25,7 @@ class CardAddForm extends Component<MyProps, MyState> {
   private posterUrl: string;
   private year: number;
   private adultOnly: boolean;
+  private chosenGenres: string[] = [];
 
   constructor(props: MyProps) {
     super(props);
@@ -70,6 +71,11 @@ class CardAddForm extends Component<MyProps, MyState> {
   };
 
   handleGenresChange = () => {
+    this.chosenGenres = this.genres as unknown as [];
+    const checkboxArray = Array.prototype.slice.call(this.chosenGenres);
+    const checkedCheckboxes = checkboxArray.filter((input) => input.checked);
+    this.chosenGenres = checkedCheckboxes.map((input) => input.value);
+
     this.setState(
       {
         errors: { ...this.state.errors, genres: '' },
@@ -102,14 +108,6 @@ class CardAddForm extends Component<MyProps, MyState> {
     );
   };
 
-  handleFormChange = () => {
-    // console.log(this.isError);
-    // console.log(Object.values(this.state.errors));
-    // if (!this.isError) {
-    //   this.setState({ disabled: false });
-    // }
-  };
-
   checkIsFormValid = () => {
     const errors: FieldsError = {
       title: '',
@@ -130,19 +128,15 @@ class CardAddForm extends Component<MyProps, MyState> {
       this.year = new Date(this.date.current.value).getFullYear();
     }
 
-    // if (!genre.length) {
-    //   this.isError = true;
-    //   errors.genres = 'Please, choose the genres';
-    // }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (!this.poster.current.files[0]) {
-      errors.poster = 'Please, add the poster';
+    if (!this.chosenGenres.length) {
+      errors.genres = 'Please, choose the genres';
     }
-    // else {
-    //   this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
-    // }
+
+    if (!this.poster?.current?.files[0]) {
+      errors.poster = 'Please, add the poster';
+    } else {
+      this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
+    }
 
     if (!this.ageLimit.current) {
       errors.ageLimit = 'ageLimit error';
@@ -167,13 +161,6 @@ class CardAddForm extends Component<MyProps, MyState> {
 
   handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    // // Get checked checkboxes
-    // let { genre } = this.genres;
-    // const checkboxArray = Array.prototype.slice.call(genre);
-    // const checkedCheckboxes = checkboxArray.filter((input) => input.checked);
-    // genre = checkedCheckboxes.map((input) => input.value);
-
     if (this.checkIsFormValid()) {
       this.setState({
         cards: [
@@ -181,7 +168,7 @@ class CardAddForm extends Component<MyProps, MyState> {
           {
             title: this.title.current?.value ?? '',
             posterUrl: this.posterUrl,
-            genres: [],
+            genres: this.chosenGenres,
             id: 1,
             country: this.country.current?.value ?? '',
             date: this.year,
@@ -199,8 +186,14 @@ class CardAddForm extends Component<MyProps, MyState> {
           className="add-form"
           id="createCardCont"
           onSubmit={this.handleSubmit}
-          onChange={this.handleFormChange}
           data-testid="form"
+          ref={(form) => {
+            if (form !== null) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              this.genres = form;
+            }
+          }}
         >
           <div className="add-form__title">
             <label htmlFor="addTitle">Title:</label>
@@ -216,7 +209,13 @@ class CardAddForm extends Component<MyProps, MyState> {
           </div>
           <div className="add-form__date">
             <label htmlFor="addDate">Release date:</label>
-            <input type="date" id="addDate" data-testid="ageCheckbox" ref={this.date} onChange={this.handleDateChange} />
+            <input
+              type="date"
+              id="addDate"
+              data-testid="ageCheckbox"
+              ref={this.date}
+              onChange={this.handleDateChange}
+            />
             <div className="add-form__error">{this.state.errors.date}</div>
           </div>
           <div className="add-form__country">
