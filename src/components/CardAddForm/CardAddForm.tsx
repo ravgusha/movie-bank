@@ -152,24 +152,23 @@ class CardAddForm extends Component<MyProps, MyState> {
           onSubmit={this.handleSubmit}
           ref={(form) => (this.genres = form)}
           onChange={this.handleFormChange}
+          data-testid="form"
         >
           <div className="add-form__title">
-            <label htmlFor="addTitle">
-              Title:{' '}
-              <input
-                type="text"
-                id="addTitle"
-                maxLength={20}
-                ref={this.title}
-                onChange={this.handleTitleChange}
-              />
-            </label>
-
+            <label htmlFor="addTitle">Title:</label>
+            <input
+              type="text"
+              id="addTitle"
+              maxLength={20}
+              ref={this.title}
+              onChange={this.handleTitleChange}
+              data-testid="title"
+            />
             <div className="add-form__error">{this.state.errors.title}</div>
           </div>
           <div className="add-form__date">
             <label htmlFor="addDate">Release date:</label>
-            <input type="date" id="addDate" ref={this.date} onChange={this.handleDateChange} />
+            <input type="date" id="addDate" data-testid="ageCheckbox" ref={this.date} onChange={this.handleDateChange} />
             <div className="add-form__error">{this.state.errors.date}</div>
           </div>
           <div className="add-form__country">
@@ -181,8 +180,8 @@ class CardAddForm extends Component<MyProps, MyState> {
           </div>
           <div className="add-form__age">
             <span className="switch__title">Age limit +18</span>
-            <label className="switch">
-              <input type="checkbox" ref={this.ageLimit} />
+            <label className="switch" htmlFor="age">
+              <input type="checkbox" ref={this.ageLimit} id="age" />
               <span className="slider round" />
             </label>
           </div>
