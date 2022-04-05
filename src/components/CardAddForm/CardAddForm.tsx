@@ -6,6 +6,7 @@ interface MyState {
   cards: Card[];
   errors: FieldsError;
   disabled: true | false;
+  isFirstInput: boolean;
 }
 
 type Fields = 'title' | 'date' | 'country' | 'ageLimit' | 'genres' | 'poster';
@@ -32,6 +33,7 @@ class CardAddForm extends Component<MyProps, MyState> {
       cards: [],
       errors: { title: '', date: '', country: '', ageLimit: '', genres: '', poster: '' },
       disabled: true,
+      isFirstInput: true,
     };
     this.title = createRef();
     this.date = createRef();
@@ -44,40 +46,71 @@ class CardAddForm extends Component<MyProps, MyState> {
     this.adultOnly = false;
   }
 
-  isError = false;
-
-  handleTitleChange = () => {
-    this.setState({ errors: { ...this.state.errors, title: '' } });
-  };
-
-  handleGenresChange = () => {
-    this.setState({ errors: { ...this.state.errors, genres: '' } });
-  };
-
-  handleDateChange = () => {
-    this.setState({ errors: { ...this.state.errors, date: '' } });
-  };
-
-  handlePosterChange = () => {
-    this.setState({ errors: { ...this.state.errors, poster: '' } });
-  };
-
-  handleFormChange = () => {
-    console.log(this.isError);
-    if (!this.isError) {
-      this.setState({ disabled: false });
+  checkIsDisabled = () => {
+    if (this.state.isFirstInput) {
+      this.setState({ isFirstInput: false, disabled: false });
+    } else {
+      if (this.checkIsError(this.state.errors)) {
+        this.setState({ disabled: true });
+      } else {
+        this.setState({ disabled: false });
+      }
     }
   };
 
-  handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  handleTitleChange = () => {
+    this.setState(
+      {
+        errors: { ...this.state.errors, title: '' },
+      },
+      () => {
+        this.checkIsDisabled();
+      }
+    );
+  };
 
-    // Get checked checkboxes
-    let { genre } = this.genres;
-    const checkboxArray = Array.prototype.slice.call(genre);
-    const checkedCheckboxes = checkboxArray.filter((input) => input.checked);
-    genre = checkedCheckboxes.map((input) => input.value);
+  handleGenresChange = () => {
+    this.setState(
+      {
+        errors: { ...this.state.errors, genres: '' },
+      },
+      () => {
+        this.checkIsDisabled();
+      }
+    );
+  };
 
+  handleDateChange = () => {
+    this.setState(
+      {
+        errors: { ...this.state.errors, date: '' },
+      },
+      () => {
+        this.checkIsDisabled();
+      }
+    );
+  };
+
+  handlePosterChange = () => {
+    this.setState(
+      {
+        errors: { ...this.state.errors, poster: '' },
+      },
+      () => {
+        this.checkIsDisabled();
+      }
+    );
+  };
+
+  handleFormChange = () => {
+    // console.log(this.isError);
+    // console.log(Object.values(this.state.errors));
+    // if (!this.isError) {
+    //   this.setState({ disabled: false });
+    // }
+  };
+
+  checkIsFormValid = () => {
     const errors: FieldsError = {
       title: '',
       date: '',
@@ -88,50 +121,67 @@ class CardAddForm extends Component<MyProps, MyState> {
     };
 
     if (!this.title?.current?.value) {
-      this.isError = true;
       errors.title = 'Please, add the title';
     }
 
     if (!this.date?.current?.value) {
-      this.isError = true;
       errors.date = 'Please, add the date';
     } else {
       this.year = new Date(this.date.current.value).getFullYear();
     }
 
-    if (!genre.length) {
-      this.isError = true;
-      errors.genres = 'Please, choose the genres';
-    }
+    // if (!genre.length) {
+    //   this.isError = true;
+    //   errors.genres = 'Please, choose the genres';
+    // }
 
-    if (!this.poster.current?.files[0]) {
-      this.isError = true;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (!this.poster.current.files[0]) {
       errors.poster = 'Please, add the poster';
-    } else {
-      this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
     }
+    // else {
+    //   this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
+    // }
 
     if (!this.ageLimit.current) {
-      this.isError = true;
       errors.ageLimit = 'ageLimit error';
     } else {
       this.adultOnly = this.ageLimit.current.checked;
     }
+    this.setState({ errors: errors, disabled: this.checkIsError(errors) });
 
-    this.setState({ errors });
+    return !this.checkIsError(errors);
+  };
 
-    if (this.isError) {
-      this.setState({ disabled: true });
-    }
+  checkIsError = (errors: FieldsError) => {
+    let isError = false;
+    Object.values(errors).forEach((el) => {
+      if (el) {
+        isError = true;
+      }
+    });
+    console.log(isError);
+    return isError;
+  };
 
-    if (!this.isError) {
+  handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // // Get checked checkboxes
+    // let { genre } = this.genres;
+    // const checkboxArray = Array.prototype.slice.call(genre);
+    // const checkedCheckboxes = checkboxArray.filter((input) => input.checked);
+    // genre = checkedCheckboxes.map((input) => input.value);
+
+    if (this.checkIsFormValid()) {
       this.setState({
         cards: [
           ...this.state.cards,
           {
             title: this.title.current?.value ?? '',
             posterUrl: this.posterUrl,
-            genres: genre,
+            genres: [],
             id: 1,
             country: this.country.current?.value ?? '',
             date: this.year,
@@ -139,7 +189,6 @@ class CardAddForm extends Component<MyProps, MyState> {
           },
         ],
       });
-      this.genres.reset();
     }
   };
 
@@ -150,7 +199,6 @@ class CardAddForm extends Component<MyProps, MyState> {
           className="add-form"
           id="createCardCont"
           onSubmit={this.handleSubmit}
-          ref={(form) => (this.genres = form)}
           onChange={this.handleFormChange}
         >
           <div className="add-form__title">
