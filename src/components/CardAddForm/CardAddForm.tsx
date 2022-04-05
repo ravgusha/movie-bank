@@ -63,6 +63,7 @@ class CardAddForm extends Component<MyProps, MyState> {
   };
 
   handleFormChange = () => {
+    console.log(this.isError);
     if (!this.isError) {
       this.setState({ disabled: false });
     }
@@ -122,7 +123,7 @@ class CardAddForm extends Component<MyProps, MyState> {
     if (this.isError) {
       this.setState({ disabled: true });
     }
-    console.log(this.isError);
+
     if (!this.isError) {
       this.setState({
         cards: [
@@ -138,6 +139,7 @@ class CardAddForm extends Component<MyProps, MyState> {
           },
         ],
       });
+      this.genres.reset();
     }
   };
 
@@ -152,14 +154,17 @@ class CardAddForm extends Component<MyProps, MyState> {
           onChange={this.handleFormChange}
         >
           <div className="add-form__title">
-            <label htmlFor="addTitle">Title: </label>
-            <input
-              type="text"
-              id="addTitle"
-              maxLength={20}
-              ref={this.title}
-              onChange={this.handleTitleChange}
-            />
+            <label htmlFor="addTitle">
+              Title:{' '}
+              <input
+                type="text"
+                id="addTitle"
+                maxLength={20}
+                ref={this.title}
+                onChange={this.handleTitleChange}
+              />
+            </label>
+
             <div className="add-form__error">{this.state.errors.title}</div>
           </div>
           <div className="add-form__date">
