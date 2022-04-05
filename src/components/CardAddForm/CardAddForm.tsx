@@ -5,9 +5,10 @@ import CardItem, { Card } from '../CardItem/CardItem';
 interface MyState {
   cards: Card[];
   errors: FieldsError;
+  disabled: true | false;
 }
 
-type Fields = 'title' | 'date' | 'country' | 'ageLimit' | 'genres' | 'posterUrl';
+type Fields = 'title' | 'date' | 'country' | 'ageLimit' | 'genres' | 'poster';
 type FieldsError = Record<Fields, string>;
 
 interface MyProps {
@@ -19,25 +20,38 @@ class CardAddForm extends Component<MyProps, MyState> {
   private country: React.RefObject<HTMLSelectElement>;
   private ageLimit: React.RefObject<HTMLInputElement>;
   private genres: React.RefObject<HTMLFormElement>;
-  private posterUrl: React.RefObject<HTMLInputElement>;
+  private poster: React.RefObject<HTMLInputElement>;
+  private posterUrl: string;
+  private year: number;
+  private adultOnly: boolean;
 
   constructor(props: MyProps) {
     super(props);
 
     this.state = {
       cards: [],
-      errors: { title: '', date: '', country: '', ageLimit: '', genres: '', posterUrl: '' },
+      errors: { title: '', date: '', country: '', ageLimit: '', genres: '', poster: '' },
+      disabled: true,
     };
     this.title = createRef();
     this.date = createRef();
     this.country = createRef();
     this.ageLimit = createRef();
-    this.posterUrl = createRef();
+    this.poster = createRef();
     this.genres = createRef();
+    this.posterUrl = '';
+    this.year = 2000;
+    this.adultOnly = false;
   }
+
+  isError = false;
 
   handleTitleChange = () => {
     this.setState({ errors: { ...this.state.errors, title: '' } });
+  };
+
+  handleGenresChange = () => {
+    this.setState({ errors: { ...this.state.errors, genres: '' } });
   };
 
   handleDateChange = () => {
@@ -45,7 +59,13 @@ class CardAddForm extends Component<MyProps, MyState> {
   };
 
   handlePosterChange = () => {
-    this.setState({ errors: { ...this.state.errors, posterUrl: '' } });
+    this.setState({ errors: { ...this.state.errors, poster: '' } });
+  };
+
+  handleFormChange = () => {
+    if (!this.isError) {
+      this.setState({ disabled: false });
+    }
   };
 
   handleSubmit = (event: React.FormEvent) => {
@@ -54,54 +74,67 @@ class CardAddForm extends Component<MyProps, MyState> {
     // Get checked checkboxes
     let { genre } = this.genres;
     const checkboxArray = Array.prototype.slice.call(genre);
-    const checkedCheckboxes = checkboxArray.filter(input => input.checked);
-    genre = checkedCheckboxes.map(input => input.value);
-    console.log("checked array values:", genre);
+    const checkedCheckboxes = checkboxArray.filter((input) => input.checked);
+    genre = checkedCheckboxes.map((input) => input.value);
 
-    let isError = false;
     const errors: FieldsError = {
       title: '',
       date: '',
       country: '',
       ageLimit: '',
       genres: '',
-      posterUrl: '',
+      poster: '',
     };
 
     if (!this.title?.current?.value) {
-      isError = true;
-      errors.title = 'Title error';
+      this.isError = true;
+      errors.title = 'Please, add the title';
     }
 
     if (!this.date?.current?.value) {
-      isError = true;
-      errors.date = 'Date error';
+      this.isError = true;
+      errors.date = 'Please, add the date';
+    } else {
+      this.year = new Date(this.date.current.value).getFullYear();
     }
 
     if (!genre.length) {
-      isError = true;
-      errors.genres = 'Genres error';
+      this.isError = true;
+      errors.genres = 'Please, choose the genres';
     }
 
-    if (!this.posterUrl) {
-        isError = true;
-        errors.posterUrl = 'posterUrl error';
-      }
+    if (!this.poster.current?.files[0]) {
+      this.isError = true;
+      errors.poster = 'Please, add the poster';
+    } else {
+      this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
+    }
+
+    if (!this.ageLimit.current) {
+      this.isError = true;
+      errors.ageLimit = 'ageLimit error';
+    } else {
+      this.adultOnly = this.ageLimit.current.checked;
+    }
 
     this.setState({ errors });
 
-    if (!isError) {
+    if (this.isError) {
+      this.setState({ disabled: true });
+    }
+    console.log(this.isError);
+    if (!this.isError) {
       this.setState({
         cards: [
           ...this.state.cards,
           {
             title: this.title.current?.value ?? '',
-            posterUrl: URL.createObjectURL(this.posterUrl.current.files[0]),
+            posterUrl: this.posterUrl,
             genres: genre,
             id: 1,
             country: this.country.current?.value ?? '',
-            date: new Date(this.date.current.value).getFullYear(),
-            ageLimit: this.ageLimit.current.checked,
+            date: this.year,
+            ageLimit: this.adultOnly,
           },
         ],
       });
@@ -111,16 +144,28 @@ class CardAddForm extends Component<MyProps, MyState> {
   render() {
     return (
       <>
-        <form className="add-form" id="createCardCont" onSubmit={this.handleSubmit} ref={form => (this.genres = form)}>
+        <form
+          className="add-form"
+          id="createCardCont"
+          onSubmit={this.handleSubmit}
+          ref={(form) => (this.genres = form)}
+          onChange={this.handleFormChange}
+        >
           <div className="add-form__title">
             <label htmlFor="addTitle">Title: </label>
-            <input type="text" id="addTitle" ref={this.title} onChange={this.handleTitleChange} />
-            <div>{this.state.errors.title}</div>
+            <input
+              type="text"
+              id="addTitle"
+              maxLength={20}
+              ref={this.title}
+              onChange={this.handleTitleChange}
+            />
+            <div className="add-form__error">{this.state.errors.title}</div>
           </div>
           <div className="add-form__date">
             <label htmlFor="addDate">Release date:</label>
             <input type="date" id="addDate" ref={this.date} onChange={this.handleDateChange} />
-            <div>{this.state.errors.date}</div>
+            <div className="add-form__error">{this.state.errors.date}</div>
           </div>
           <div className="add-form__country">
             <label htmlFor="addCountry">Country:</label>
@@ -136,25 +181,37 @@ class CardAddForm extends Component<MyProps, MyState> {
               <span className="slider round" />
             </label>
           </div>
-          <div
-            className="add-form__genre">
+          <div className="add-form__genre" onChange={this.handleGenresChange}>
             <span className="genre__title">Genres: </span>
-            <div>{this.state.errors.genres}</div>
-            <CheckboxSet setName={"genre"} setOptions={["action", "comedy", "drama", 'fantasy', 'horror', "mystery", "romance", "thriller", "western"]} />
+            <CheckboxSet
+              setName={'genre'}
+              setOptions={[
+                'action',
+                'comedy',
+                'drama',
+                'fantasy',
+                'horror',
+                'mystery',
+                'romance',
+                'thriller',
+                'western',
+              ]}
+            />
+            <div className="add-form__error">{this.state.errors.genres}</div>
           </div>
           <div className="add-form__img">
-          <div>{this.state.errors.posterUrl}</div>
             <label htmlFor="fileUpload">Add poster</label>
             <input
               type="file"
               id="fileUpload"
               title=" "
               accept="image/jpeg"
-              ref={this.posterUrl}
+              ref={this.poster}
               onChange={this.handlePosterChange}
             />
           </div>
-          <input type="submit" />
+          <div className="add-form__error">{this.state.errors.poster}</div>
+          <input type="submit" disabled={this.state.disabled} />
         </form>
         <div className="cards">
           {this.state.cards.map((card) => {
@@ -166,20 +223,19 @@ class CardAddForm extends Component<MyProps, MyState> {
   }
 }
 
-
 function CheckboxSet(props: { setOptions: string[]; setName: string }) {
-    return (
-      <div>
-        {props.setOptions.map(option => {
-          return (
-            <label key={option} style={{ textTransform: "capitalize" }}>
-              <input type="checkbox" value={option} name={props.setName} />
-              {option}
-            </label>
-          );
-        })}
-      </div>
-    );
-  }
+  return (
+    <div>
+      {props.setOptions.map((option) => {
+        return (
+          <label key={option} style={{ textTransform: 'capitalize' }}>
+            <input type="checkbox" value={option} name={props.setName} />
+            {option}
+          </label>
+        );
+      })}
+    </div>
+  );
+}
 
 export default CardAddForm;

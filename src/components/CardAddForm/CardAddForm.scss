@@ -1,5 +1,5 @@
 .add-form {
-//   display: none;
+  //   display: none;
   margin: 28px auto;
   padding: 25px;
   box-shadow: 0 0 7px 1px #d3d3d3;
@@ -33,6 +33,12 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    
+    &[type='submit']:disabled {
+      border: 1px solid #999999;
+      background-color: #cccccc;
+      color: #666666;
+    }
   }
 
   div {
@@ -57,7 +63,11 @@
   }
 
   .open {
-      display: flex;
+    display: flex;
+  }
+
+  .add-form__error {
+    color: red;
   }
 }
 
