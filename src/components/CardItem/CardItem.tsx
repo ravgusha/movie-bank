@@ -4,20 +4,15 @@ import './CardItem.scss';
 export type Card = {
   posterUrl: string;
   title: string;
-  genres: string[];
+  genre: string;
   id: number;
   date: number;
-  country: string;
   ageLimit: boolean;
+  subtitles: boolean;
 };
 
 class CardItem extends Component<Card> {
-  genres = this.props.genres.map((item, index) => (
-    <span key={index}>
-      {' '}
-      {item} {index < this.props.genres.length - 1 ? '|' : ''}
-    </span>
-  ));
+
 
   render() {
     return (
@@ -29,8 +24,8 @@ class CardItem extends Component<Card> {
         <h3 className="card__title">
           {this.props.title} ({this.props.date})
         </h3>
-        <p className="card__genre">{this.genres}</p>
-        <p className="card__country">{this.props.country}</p>
+        <p className="card__genre">{this.props.genre}</p>
+        <p className="card__subtitles">{this.props.subtitles ? 'with subtitles' : null}</p>
       </li>
     );
   }
