@@ -146,7 +146,6 @@ class CardAddForm extends Component<MyProps, MyState> {
         isError = true;
       }
     });
-    console.log(errors, isError);
     return isError;
   };
 
@@ -180,7 +179,7 @@ class CardAddForm extends Component<MyProps, MyState> {
           id="createCardCont"
           onSubmit={this.handleSubmit}
           data-testid="form"
-          ref={(el) => this.form = el}
+          ref={(el) => (this.form = el)}
         >
           <div className="add-form__title">
             <label htmlFor="addTitle">Title:</label>
@@ -206,7 +205,7 @@ class CardAddForm extends Component<MyProps, MyState> {
             <div className="add-form__error">{this.state.errors.date}</div>
           </div>
           <div className="add-form__genre">
-            <label>Genre:</label>
+            <label htmlFor="genres">Genre:</label>
             <OptionSet
               setOptions={[
                 'action',
@@ -260,12 +259,12 @@ class CardAddForm extends Component<MyProps, MyState> {
   }
 }
 
-function OptionSet(props: { setOptions: string[], innerRef: React.RefObject<HTMLSelectElement> }) {
+function OptionSet(props: { setOptions: string[]; innerRef: React.RefObject<HTMLSelectElement> }) {
   return (
-    <select ref={props.innerRef}>
+    <select ref={props.innerRef} id="genres">
       {props.setOptions.map((option) => {
         return (
-          <option key={option} value={option}  data-testid={option}>
+          <option key={option} value={option} data-testid={option}>
             {option}
           </option>
         );
