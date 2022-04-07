@@ -1,7 +1,7 @@
 import { Routes, Route} from 'react-router-dom';
 import './App.scss';
 import Header from './components/Header/Header';
-import { NotFoundPage } from './pages/Notfoundpage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage } from './pages/Homepage';
 import { AboutPage } from './pages/Aboutpage';
 

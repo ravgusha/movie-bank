@@ -1,7 +1,5 @@
 import { Component } from 'react';
-
 import './MainText.scss';
-
 class MainText extends Component {
   render() {
     return (

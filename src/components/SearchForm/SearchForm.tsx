@@ -1,15 +1,10 @@
 import { Component } from 'react';
 import './SearchForm.scss';
-
-// Подправить?
-interface MyProps {
-  list?: string[];
-}
 interface MyState {
   inputValue: string;
 }
-class SearchForm extends Component<MyProps, MyState> {
-  constructor(props: MyProps) {
+class SearchForm extends Component<object, MyState> {
+  constructor(props = {}) {
     super(props);
     this.state = {
       inputValue: localStorage.getItem('inputValue') || '',
