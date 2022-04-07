@@ -1,9 +1,12 @@
-import { Routes, Route} from 'react-router-dom';
-import './App.scss';
+import { Routes, Route } from 'react-router-dom';
+
 import Header from './components/Header/Header';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { HomePage } from './pages/Homepage';
-import { AboutPage } from './pages/Aboutpage';
+import { HomePage } from './pages/HomePage';
+import { AboutPage } from './pages/AboutPage';
+import { CardAddPage } from './pages/CardAddPage';
+
+import './App.scss';
 
 function App() {
   return (
@@ -12,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="add" element={<CardAddPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

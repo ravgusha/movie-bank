@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './Header.scss';
 class Header extends Component {
-  
+
   render() {
     return (
       <header className="header" data-testid="header">
@@ -13,7 +13,7 @@ class Header extends Component {
           <Link to="/about">About Us</Link>
         </div>
         <div className="header__create-form">
-          <div>Create Card</div>
+        <Link to="add">Create Card</Link>
         </div>
       </header>
     );
