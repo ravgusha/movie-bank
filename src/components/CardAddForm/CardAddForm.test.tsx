@@ -1,8 +1,6 @@
-import { render, screen, waitFor, within, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CardAddForm from './CardAddForm';
-import { BrowserRouter } from 'react-router-dom';
-import user from '@testing-library/user-event';
 
 describe('Card add form', () => {
   const onSubmit = jest.fn();
