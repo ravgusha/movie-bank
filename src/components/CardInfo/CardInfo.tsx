@@ -1,13 +1,16 @@
 import { Component } from 'react';
-import './CardInfo.scss';
 import { ApiCard } from '../CardList/CardList';
 
+import './CardInfo.scss';
 interface MyProps {
   closeCardInfo: () => void;
   currentMovie?: ApiCard | null;
 }
+interface IGenreList {
+  [index: string]: number;
+}
 
-const genresList = {
+const genresList: IGenreList = {
   Action: 28,
   Adventure: 12,
   Animation: 16,
@@ -29,11 +32,14 @@ const genresList = {
   Western: 37,
 };
 class CardInfo extends Component<MyProps> {
-  genresText = [];
+  textedGenres: string[] = [];
+
   getTextedGenres = () => {
     if (this.props.currentMovie) {
+      const keys = Object.keys(genresList);
       this.props.currentMovie.genre_ids.forEach((genre) => {
-        this.genresText.push(Object.keys(genresList).find((key) => genresList[key] === genre));
+        const match = keys.find((key) => genresList[key] === genre) || '';
+        this.textedGenres.push(match);
       });
     }
   };
@@ -43,30 +49,34 @@ class CardInfo extends Component<MyProps> {
 
     return (
       <div className="info">
-        <div className="info__content">
-          <div className="info__header" onClick={this.props.closeCardInfo}>
-            <span>X</span>
-          </div>
-          {this.props.currentMovie == null ? null : (
-            <div className="info__main">
-              <div className="info__image">
-                {this.props.currentMovie.poster_path == null ? (
-                  <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
-                ) : (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${this.props.currentMovie.poster_path}`}
-                  />
-                )}
+        {this.props.currentMovie == null ? null : (
+          <div className="info__main">
+            <div className="info__image">
+              {this.props.currentMovie.poster_path == null ? (
+                <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
+              ) : (
+                <img
+                  src={`https://image.tmdb.org/t/p/w200${this.props.currentMovie.poster_path}`}
+                />
+              )}
+            </div>
+            <div className="info__text">
+              <div className="info__header">
+                <span onClick={this.props.closeCardInfo}>X</span>
+                <p className="info__title">{this.props.currentMovie.title}</p>
+                <div className="info__subtitles">
+                  <p>{this.props.currentMovie.release_date}</p>
+                  <p>{this.props.currentMovie.original_language}</p>
+                  <p>{this.textedGenres.join(' | ')}</p>
+                </div>
               </div>
-              <div className="info__text">
-                <p>{this.props.currentMovie.title}</p>
-                <p>{this.props.currentMovie.release_date}</p>
-                <p>{this.props.currentMovie.original_language}</p>
-                <p>{this.genresText.join(' | ')}</p>
+              <div className="info__body">
+                <p className="info__description">{this.props.currentMovie.overview}</p>
+                <p className="info__rating">{this.props.currentMovie.vote_average}</p>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }

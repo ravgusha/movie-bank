@@ -5,11 +5,11 @@ interface MyState {
 }
 
 interface MyProps {
-  handleChange:  ((e: ChangeEvent<HTMLFormElement>) => void);
+  handleChange:  ((e: React.FormEvent) => void);
   handleSubmit: ((e: React.FormEvent) => void);
 }
 class SearchForm extends Component<MyProps, MyState> {
-  constructor(props) {
+  constructor(props: MyProps) {
     super(props);
   }
 
