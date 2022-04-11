@@ -2,10 +2,13 @@ import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
 import CardList from '../components/CardList/CardList';
 import { ChangeEvent, Component } from 'react';
-import { Card } from '../components/CardItem/CardItem';
+import CardInfo from '../components/CardInfo/CardInfo';
+
+import { ApiCard } from '../components/CardList/CardList';
 interface MyState {
-  movies: Card[];
+  movies: ApiCard[];
   searchTerm: string;
+  currentMovie: ApiCard[] | null;
 }
 interface MyProps {
   apiKey?: string;
@@ -18,6 +21,7 @@ class HomePage extends Component<MyProps, MyState> {
     this.state = {
       movies: [],
       searchTerm: '',
+      currentMovie: null,
     };
     this.apiKey = 'ec79681972e0c0a082743a6481ea4b2c';
   }
@@ -40,12 +44,30 @@ class HomePage extends Component<MyProps, MyState> {
     this.setState({ searchTerm: e.target.value });
   };
 
+  viewCardInfo = (id: number) => {
+    let filteredMovie = null;
+    this.state.movies.forEach((movie) => {
+      if (movie.id == id) {
+        filteredMovie = movie;
+      }
+    });
+    this.setState({ currentMovie: filteredMovie });
+    console.log(filteredMovie);
+  };
+
+  closeCardInfo = () => {
+    this.setState({ currentMovie: null });
+  };
+
   render() {
     return (
       <div>
+        {this.state.currentMovie === null ? null : (
+          <CardInfo closeCardInfo={this.closeCardInfo} currentMovie={this.state.currentMovie} />
+        )}
         <MainText />
         <SearchForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
-        <CardList movies={this.state.movies} />
+        <CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />
       </div>
     );
   }

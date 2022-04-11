@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import './CardList.scss';
 import CardItem from '../CardItem/CardItem';
-interface ApiCard {
+export interface ApiCard {
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];
@@ -19,22 +19,27 @@ interface ApiCard {
 }
 interface MyProps {
   movies: ApiCard[];
+  viewCardInfo: (id: number) => void;
+  
 }
 class CardList extends Component<MyProps> {
   constructor(props: MyProps) {
     super(props);
+    
   }
-
-  // cards = this.props.movies.map((item) => {
-  //   console.log(item)
-  //   return <CardItem key={item.id} image={item.poster_path} />;
-  // });
 
   render() {
     return (
       <ul data-testid="cards" className="cards">
         {this.props.movies.map((movie, i) => {
-          return <CardItem key={i} image={movie.poster_path} />;
+          return (
+            <CardItem
+              key={i}
+              viewCardInfo={this.props.viewCardInfo}
+              movieId={movie.id}
+              image={movie.poster_path}
+            />
+          );
         })}
       </ul>
     );
