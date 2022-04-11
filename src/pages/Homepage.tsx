@@ -8,7 +8,7 @@ import { ApiCard } from '../components/CardList/CardList';
 interface MyState {
   movies: ApiCard[];
   searchTerm: string;
-  currentMovie: ApiCard[] | null;
+  currentMovie: ApiCard | null;
 }
 interface MyProps {
   apiKey?: string;
