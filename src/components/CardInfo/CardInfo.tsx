@@ -24,9 +24,14 @@ class CardInfo extends Component<MyProps> {
     this.getTextedGenres();
 
     return (
-      <div className="info">
+      <div className="info" onClick={this.props.closeCardInfo}>
         {this.props.currentMovie == null ? null : (
-          <div className="info__main">
+          <div
+            className="info__main"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <div className="info__image">
               {this.props.currentMovie.poster_path == null ? (
                 <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
