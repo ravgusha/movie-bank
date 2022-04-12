@@ -1,45 +1,21 @@
 import { Component } from 'react';
 import { ApiCard } from '../CardList/CardList';
-
+import { genresList, IGenre } from '../../pages/HomePage';
 import './CardInfo.scss';
 interface MyProps {
   closeCardInfo: () => void;
   currentMovie?: ApiCard | null;
 }
-interface IGenreList {
-  [index: string]: number;
-}
-
-const genresList: IGenreList = {
-  Action: 28,
-  Adventure: 12,
-  Animation: 16,
-  Comedy: 35,
-  Crime: 80,
-  Documentary: 99,
-  Drama: 18,
-  Family: 10751,
-  Fantasy: 14,
-  History: 36,
-  Horror: 27,
-  Music: 10402,
-  Mystery: 9648,
-  Romance: 10749,
-  'Science Fiction': 878,
-  'TV Movie ': 10770,
-  Thriller: 53,
-  War: 10752,
-  Western: 37,
-};
 class CardInfo extends Component<MyProps> {
   textedGenres: string[] = [];
 
   getTextedGenres = () => {
     if (this.props.currentMovie) {
-      const keys = Object.keys(genresList);
       this.props.currentMovie.genre_ids.forEach((genre) => {
-        const match = keys.find((key) => genresList[key] === genre) || '';
-        this.textedGenres.push(match);
+        const match = genresList.find((o: IGenre) => o.id === genre);
+        if (match) {
+          this.textedGenres.push(match.name);
+        }
       });
     }
   };

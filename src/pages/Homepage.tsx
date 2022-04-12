@@ -1,18 +1,26 @@
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
-import CardList from '../components/CardList/CardList';
-import { ChangeEvent, Component } from 'react';
+import CardList, { ApiCard } from '../components/CardList/CardList';
+import { ChangeEvent, Component, FormEvent } from 'react';
 import CardInfo from '../components/CardInfo/CardInfo';
 
-import { ApiCard } from '../components/CardList/CardList';
 interface MyState {
   movies: ApiCard[];
   searchTerm: string;
   currentMovie: ApiCard | null;
 }
+
 interface MyProps {
   apiKey?: string;
 }
+
+export interface IGenre{
+  id: number;
+  name: string;
+}
+
+export let genresList: Array<IGenre>;
+
 class HomePage extends Component<MyProps, MyState> {
   apiKey: string;
 
@@ -26,7 +34,7 @@ class HomePage extends Component<MyProps, MyState> {
     this.apiKey = 'ec79681972e0c0a082743a6481ea4b2c';
   }
 
-  handleSubmit = (e: React.FormEvent) => {
+  handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}`
@@ -35,11 +43,10 @@ class HomePage extends Component<MyProps, MyState> {
       .then((data) => {
         console.log(data);
         this.setState({ movies: [...data.results] });
-        console.log(this.state);
       });
   };
 
-  handleChange = (e: ChangeEvent<HTMLFormElement>) => {
+  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     this.setState({ searchTerm: e.target.value });
   };
@@ -52,14 +59,24 @@ class HomePage extends Component<MyProps, MyState> {
       }
     });
     this.setState({ currentMovie: filteredMovie });
-    console.log(filteredMovie);
   };
 
   closeCardInfo = () => {
     this.setState({ currentMovie: null });
   };
 
+  getGenresList = () => {
+    fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${this.apiKey}`)
+      .then((data) => data.json())
+      .then((data) => {
+        genresList = data.genres;
+        console.log(genresList);
+      });
+  };
+
   render() {
+    this.getGenresList();
+
     return (
       <div>
         {this.state.currentMovie === null ? null : (
