@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { ApiCard } from '../CardList/CardList';
-import { genresList, IGenre } from '../../pages/HomePage';
+import { genresList, IGenre } from '../../App';
 import './CardInfo.scss';
 interface MyProps {
   closeCardInfo: () => void;
@@ -63,18 +63,4 @@ class CardInfo extends Component<MyProps> {
   }
 }
 
-// adult: boolean;
-// backdrop_path: string;
-// genre_ids: number[];
-// id: number;
-// original_language: string;
-// original_title: string;
-// overview: string;
-// popularity: number;
-// poster_path: string;
-// release_date: string;
-// title: string;
-// video: boolean;
-// vote_average: number;
-// vote_count: number;
 export default CardInfo;

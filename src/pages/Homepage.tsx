@@ -1,25 +1,20 @@
+import { ChangeEvent, Component, FormEvent } from 'react';
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
 import CardList, { ApiCard } from '../components/CardList/CardList';
-import { ChangeEvent, Component, FormEvent } from 'react';
 import CardInfo from '../components/CardInfo/CardInfo';
+import Spinner from '../components/Spinner/Spinner'
 
 interface MyState {
   movies: ApiCard[];
   searchTerm: string;
   currentMovie: ApiCard | null;
+  fetchInProgress: boolean;
 }
 
 interface MyProps {
   apiKey?: string;
 }
-
-export interface IGenre{
-  id: number;
-  name: string;
-}
-
-export let genresList: Array<IGenre>;
 
 class HomePage extends Component<MyProps, MyState> {
   apiKey: string;
@@ -30,19 +25,20 @@ class HomePage extends Component<MyProps, MyState> {
       movies: [],
       searchTerm: '',
       currentMovie: null,
+      fetchInProgress: false,
     };
     this.apiKey = 'ec79681972e0c0a082743a6481ea4b2c';
   }
 
   handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    this.setState({fetchInProgress: true });
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}`
     )
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
-        this.setState({ movies: [...data.results] });
+        this.setState({ movies: [...data.results], fetchInProgress: false });
       });
   };
 
@@ -65,26 +61,20 @@ class HomePage extends Component<MyProps, MyState> {
     this.setState({ currentMovie: null });
   };
 
-  getGenresList = () => {
-    fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${this.apiKey}`)
-      .then((data) => data.json())
-      .then((data) => {
-        genresList = data.genres;
-        console.log(genresList);
-      });
-  };
-
   render() {
-    this.getGenresList();
-
     return (
       <div>
         {this.state.currentMovie === null ? null : (
           <CardInfo closeCardInfo={this.closeCardInfo} currentMovie={this.state.currentMovie} />
         )}
+
         <MainText />
         <SearchForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
-        <CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />
+        {this.state.fetchInProgress ? (
+          <Spinner />
+        ) : (
+          <CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />
+        )}
       </div>
     );
   }

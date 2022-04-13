@@ -20,12 +20,11 @@ export interface ApiCard {
 interface MyProps {
   movies: ApiCard[];
   viewCardInfo: (id: number) => void;
-  
 }
+
 class CardList extends Component<MyProps> {
   constructor(props: MyProps) {
     super(props);
-    
   }
 
   render() {
