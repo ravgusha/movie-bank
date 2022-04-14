@@ -1,3 +1,5 @@
+@use '../../styles/variables' as variables;
+
 .search-form {
   width: 750px;
   height: 70px;
@@ -21,7 +23,7 @@
 
   button {
     font-family: 'Montserrat', sans-serif;
-    background-color: #6935fd;
+    background-color: variables.$main-color;
     outline: none;
     border: none;
     color: white;

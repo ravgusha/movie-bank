@@ -1,3 +1,5 @@
+@use '../../styles/variables' as variables;
+
 .card {
   list-style-type: none;
   max-width: 200px;
@@ -12,8 +14,9 @@
     text-align: center;
     margin: 10px 10px 5px;
   }
+
   p {
-    color: #616161;
+    color: variables.$grey-color;
     font-size: 13px;
     text-align: center;
     margin: 5px 0;
@@ -26,7 +29,7 @@
       position: absolute;
       right: 26px;
       bottom: 12px;
-      background-color: #6935fd;
+      background-color: variables.$main-color;
       border-radius: 50%;
       color: #fff;
       padding: 5px;

@@ -1,3 +1,5 @@
+@use '../../styles/variables' as variables;
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -5,7 +7,7 @@
   font-size: 25px;
 
   &__logo {
-    color: #6935fd;
+    color: variables.$main-color;
     font-size: 30px;
     font-weight: 700;
   }
@@ -13,7 +15,6 @@
   &__links {
     display: flex;
     justify-content: space-between;
-
   }
   a {
     text-decoration: none;

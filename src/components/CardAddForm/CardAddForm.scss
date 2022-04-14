@@ -1,3 +1,5 @@
+@use '../../styles/variables' as variables;
+
 .add-form {
   margin: 28px auto;
   padding: 25px;
@@ -23,7 +25,7 @@
     }
 
     &[type='submit'] {
-      background-color: #6935fd;
+      background-color: variables.$main-color;
       width: fit-content;
       color: #fff;
       padding: 10px 25px;
@@ -35,7 +37,7 @@
 
     &[type='submit']:disabled {
       border: 1px solid #999999;
-      background-color: #cccccc;
+      background-color: #ccc;
       color: #666666;
     }
   }
@@ -93,11 +95,11 @@
     }
 
     input:checked + .slider {
-      background-color: #6935fd;
+      background-color: variables.$main-color;
     }
 
     input:focus + .slider {
-      box-shadow: 0 0 1px #6935fd;
+      box-shadow: 0 0 1px variables.$main-color;
     }
 
     input:checked + .slider:before {
