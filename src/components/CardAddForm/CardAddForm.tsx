@@ -1,7 +1,9 @@
 import React, { Component, createRef } from 'react';
-import './CardAddForm.scss';
+import { v4 as uuid } from 'uuid';
+
 import CardItem, { Card } from '../CardItem/CardItem';
 
+import './CardAddForm.scss';
 interface MyState {
   cards: Card[];
   errors: FieldsError;
@@ -128,6 +130,10 @@ class CardAddForm extends Component<MyProps, MyState> {
       this.subs = this.subtitles.current.checked;
     }
 
+    if (!this.poster.current?.files) {
+      return;
+    }
+
     if (!this.poster?.current?.files[0]) {
       errors.poster = 'Please, add the poster';
     } else {
@@ -153,6 +159,8 @@ class CardAddForm extends Component<MyProps, MyState> {
     event.preventDefault();
 
     if (this.checkIsFormValid()) {
+      const unique_id = uuid();
+      const small_id = Number(unique_id.slice(0, 8));
       this.setState({
         cards: [
           ...this.state.cards,
@@ -163,11 +171,11 @@ class CardAddForm extends Component<MyProps, MyState> {
             ageLimit: this.adultOnly,
             subtitles: this.subs,
             posterUrl: this.posterUrl,
-            id: 1,
+            id: small_id,
           },
         ],
       });
-      this.form.reset();
+      this.form.current?.reset();
     }
   };
 
@@ -179,7 +187,7 @@ class CardAddForm extends Component<MyProps, MyState> {
           id="createCardCont"
           onSubmit={this.handleSubmit}
           data-testid="form"
-          ref={(el) => (this.form = el)}
+          ref={this.form}
         >
           <div className="add-form__title">
             <label htmlFor="addTitle">Title:</label>
@@ -222,7 +230,6 @@ class CardAddForm extends Component<MyProps, MyState> {
             />
           </div>
           <div className="add-form__age">
-            {/* <span className="switch__title"></span> */}
             <label className="switch" htmlFor="age">
               Age limit +18:
               <input type="checkbox" ref={this.ageLimit} id="age" />
