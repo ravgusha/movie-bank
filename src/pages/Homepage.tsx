@@ -23,11 +23,28 @@ class HomePage extends Component<MyProps, MyState> {
     super(props);
     this.state = {
       movies: [],
-      searchTerm: '',
+      searchTerm: localStorage.getItem('inputValue') || '',
       currentMovie: null,
       fetchInProgress: false,
     };
+    this.componentCleanup = this.componentCleanup.bind(this);
     this.apiKey = 'ec79681972e0c0a082743a6481ea4b2c';
+  }
+
+  componentCleanup() {
+    localStorage.setItem('inputValue', this.state.searchTerm);
+  }
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.componentCleanup);
+    this.setState({
+      searchTerm: localStorage.getItem('inputValue') || '',
+    });
+  }
+
+  componentWillUnmount() {
+    this.componentCleanup();
+    window.removeEventListener('beforeunload', this.componentCleanup);
   }
 
   handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -67,14 +84,9 @@ class HomePage extends Component<MyProps, MyState> {
         {this.state.currentMovie === null ? null : (
           <CardInfo closeCardInfo={this.closeCardInfo} currentMovie={this.state.currentMovie} />
         )}
-
         <MainText />
-        <SearchForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
-        {this.state.fetchInProgress ? (
-          <Spinner />
-        ) : (
-          <CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />
-        )}
+        <SearchForm value={this.state.searchTerm} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
+        {this.state.fetchInProgress ? (<Spinner />) : (<CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />)}
       </div>
     );
   }

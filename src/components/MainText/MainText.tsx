@@ -5,7 +5,7 @@ class MainText extends Component {
     return (
       <div className='main-text'>
         <h1 className='main-text__title'>Find Your Perfect Movie</h1>
-        <p className='main-textr__description'>For all those movie therapy lovers, we have gathered the best of the best in every genre.<br />Here we go!
+        <p className='main-text__description'>For all those movie therapy lovers, we have gathered the best of the best in every genre.<br />Here we go!
         </p>
       </div>
     );

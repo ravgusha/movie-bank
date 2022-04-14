@@ -28,6 +28,7 @@ class CardInfo extends Component<MyProps> {
         {this.props.currentMovie == null ? null : (
           <div
             className="info__main"
+            data-testid="popup"
             onClick={(e) => {
               e.stopPropagation();
             }}

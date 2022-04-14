@@ -1,14 +1,11 @@
 import { Component } from 'react';
 import './SearchForm.scss';
-interface MyState {
-  inputValue: string;
-}
-
 interface MyProps {
-  handleChange:  ((e: React.ChangeEvent<HTMLInputElement>) => void);
-  handleSubmit: ((e: React.FormEvent<HTMLFormElement>) => void);
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  value: string;
 }
-class SearchForm extends Component<MyProps, MyState> {
+class SearchForm extends Component<MyProps> {
   constructor(props: MyProps) {
     super(props);
   }
@@ -22,6 +19,7 @@ class SearchForm extends Component<MyProps, MyState> {
           type="text"
           placeholder="Search for movie..."
           onChange={this.props.handleChange}
+          value={this.props.value}
         />
         <button className="search-form__button">Search</button>
       </form>

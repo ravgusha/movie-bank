@@ -1,4 +1,4 @@
-import { screen, render } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
@@ -30,4 +30,12 @@ test('test input value', () => {
 
   unmount();
   expect(localStorage.__STORE__['inputValue']).toBe('test query');
+});
+
+test('should render cards after submit', async() => {
+  render(<BrowserRouter><App/></BrowserRouter>);
+  fireEvent.input(screen.getByRole('textbox'), { target: { value: 'The Witcher' } });
+  fireEvent.submit(screen.getByRole('button', {name: /search/i}));
+  const items = await screen.findAllByRole('listitem');
+  await waitFor(() => expect(items).toHaveLength(11));
 });
