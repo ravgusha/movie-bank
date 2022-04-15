@@ -4,7 +4,7 @@ import { Component } from 'react';
 import Header from './components/Header/Header';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/Aboutpage';
+import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
 
 import './App.scss';

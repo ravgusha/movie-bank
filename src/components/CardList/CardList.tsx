@@ -3,19 +3,19 @@ import './CardList.scss';
 import CardItem from '../CardItem/CardItem';
 export interface ApiCard {
   adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
+  backdrop_path?: string;
+  genre_ids?: number[];
   id: number;
   original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
+  original_title?: string;
+  overview?: string;
+  popularity?: number;
   poster_path: string;
   release_date: string;
   title: string;
   video: boolean;
-  vote_average: number;
-  vote_count: number;
+  vote_average?: number;
+  vote_count?: number;
 }
 interface MyProps {
   movies: ApiCard[];

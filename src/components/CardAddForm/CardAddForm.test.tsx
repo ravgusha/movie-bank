@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CardAddForm from './CardAddForm';
 
@@ -19,7 +19,7 @@ describe('Card add form', () => {
     expect(getPoster()).toBeInTheDocument();
   });
 
-  it('should render card after submit', () => {
+  it('should render card after submit', async () => {
     render(<CardAddForm onSubmit={onSubmit} />);
     fireEvent.input(getTitle(), { target: { value: 'The Witcher' } });
     fireEvent.change(getDate(), { target: { value: '2020-01-15' } });
@@ -33,7 +33,7 @@ describe('Card add form', () => {
 
     fireEvent.submit(screen.getByRole('button', { name: /submit/i }));
 
-    expect(screen.getByText('The Witcher (2020)'));
+    expect(screen.getByRole('img'));
   });
 });
 
@@ -46,15 +46,15 @@ function getDate() {
 }
 
 function getSelectGenre() {
-  return screen.getByRole('combobox', { name: /genre:/i });
+  return screen.getByRole('combobox', { name: /original language:/i });
 }
 
 function getAgeLimitCheckbox() {
-  return screen.getByTestId('ageCheckbox');
+  return screen.getByRole('checkbox', {name: /age limit \+18:/i})
 }
 
 function getSubtitlesCheckbox() {
-  return screen.getByRole('checkbox', { name: /subtitles:/i });
+  return screen.getByRole('checkbox', { name: /video:/i });
 }
 
 function getPoster() {

@@ -1,15 +1,18 @@
 import React, { Component, createRef } from 'react';
-import './CardAddForm.scss';
-import CardItem, { Card } from '../CardItem/CardItem';
+import { v4 as uuid } from 'uuid';
 
+import CardItem from '../CardItem/CardItem';
+import { ApiCard } from '../CardList/CardList';
+
+import './CardAddForm.scss';
 interface MyState {
-  cards: Card[];
+  cards: ApiCard[];
   errors: FieldsError;
   disabled: true | false;
   isFirstInput: boolean;
 }
 
-type Fields = 'title' | 'date' | 'genre' | 'ageLimit' | 'subtitles' | 'poster';
+type Fields = 'title' | 'date' | 'language' | 'ageLimit' | 'video' | 'poster';
 type FieldsError = Record<Fields, string>;
 
 interface MyProps {
@@ -18,15 +21,15 @@ interface MyProps {
 class CardAddForm extends Component<MyProps, MyState> {
   private title: React.RefObject<HTMLInputElement>;
   private date: React.RefObject<HTMLInputElement>;
-  private genre: React.RefObject<HTMLSelectElement>;
+  private language: React.RefObject<HTMLSelectElement>;
   private ageLimit: React.RefObject<HTMLInputElement>;
-  private subtitles: React.RefObject<HTMLInputElement>;
+  private video: React.RefObject<HTMLInputElement>;
   private poster: React.RefObject<HTMLInputElement>;
   private form: React.RefObject<HTMLFormElement>;
 
   private posterUrl: string;
-  private year: number;
-  private subs: boolean;
+  private year: string;
+  private vid: boolean;
   private adultOnly: boolean;
 
   constructor(props: MyProps) {
@@ -34,21 +37,21 @@ class CardAddForm extends Component<MyProps, MyState> {
 
     this.state = {
       cards: [],
-      errors: { title: '', date: '', genre: '', ageLimit: '', subtitles: '', poster: '' },
+      errors: { title: '', date: '', language: '', ageLimit: '', video: '', poster: '' },
       disabled: true,
       isFirstInput: true,
     };
     this.title = createRef();
     this.date = createRef();
-    this.genre = createRef();
+    this.language = createRef();
     this.ageLimit = createRef();
-    this.subtitles = createRef();
+    this.video = createRef();
     this.poster = createRef();
     this.form = createRef();
     this.posterUrl = '';
-    this.year = 2000;
+    this.year = '2000';
     this.adultOnly = false;
-    this.subs = false;
+    this.vid = false;
   }
 
   checkIsDisabled = () => {
@@ -100,9 +103,9 @@ class CardAddForm extends Component<MyProps, MyState> {
     const errors: FieldsError = {
       title: '',
       date: '',
-      genre: '',
+      language: '',
       ageLimit: '',
-      subtitles: '',
+      video: '',
       poster: '',
     };
 
@@ -113,7 +116,7 @@ class CardAddForm extends Component<MyProps, MyState> {
     if (!this.date?.current?.value) {
       errors.date = 'Please, add the date';
     } else {
-      this.year = new Date(this.date.current.value).getFullYear();
+      this.year = new Date(this.date.current.value).getFullYear().toString();
     }
 
     if (!this.ageLimit.current) {
@@ -122,10 +125,14 @@ class CardAddForm extends Component<MyProps, MyState> {
       this.adultOnly = this.ageLimit.current.checked;
     }
 
-    if (!this.subtitles.current) {
-      errors.subtitles = 'subtitles error';
+    if (!this.video.current) {
+      errors.video = 'video error';
     } else {
-      this.subs = this.subtitles.current.checked;
+      this.vid = this.video.current.checked;
+    }
+
+    if (!this.poster.current?.files) {
+      return;
     }
 
     if (!this.poster?.current?.files[0]) {
@@ -153,21 +160,23 @@ class CardAddForm extends Component<MyProps, MyState> {
     event.preventDefault();
 
     if (this.checkIsFormValid()) {
+      const unique_id = uuid();
+      const small_id = Number(unique_id.slice(0, 8));
       this.setState({
         cards: [
           ...this.state.cards,
           {
             title: this.title.current?.value ?? '',
-            date: this.year,
-            genre: this.genre.current?.value ?? '',
-            ageLimit: this.adultOnly,
-            subtitles: this.subs,
-            posterUrl: this.posterUrl,
-            id: 1,
+            release_date: this.year,
+            original_language: this.language.current?.value ?? '',
+            adult: this.adultOnly,
+            video: this.vid,
+            poster_path: this.posterUrl,
+            id: small_id,
           },
         ],
       });
-      this.form.reset();
+      this.form.current?.reset();
     }
   };
 
@@ -179,7 +188,7 @@ class CardAddForm extends Component<MyProps, MyState> {
           id="createCardCont"
           onSubmit={this.handleSubmit}
           data-testid="form"
-          ref={(el) => (this.form = el)}
+          ref={this.form}
         >
           <div className="add-form__title">
             <label htmlFor="addTitle">Title:</label>
@@ -204,35 +213,24 @@ class CardAddForm extends Component<MyProps, MyState> {
             />
             <div className="add-form__error">{this.state.errors.date}</div>
           </div>
-          <div className="add-form__genre">
-            <label htmlFor="genres">Genre:</label>
+          <div className="add-form__language">
+            <label htmlFor="language">Original language:</label>
             <OptionSet
-              setOptions={[
-                'action',
-                'comedy',
-                'drama',
-                'fantasy',
-                'horror',
-                'mystery',
-                'romance',
-                'thriller',
-                'western',
-              ]}
-              innerRef={this.genre}
+              setOptions={['russian', 'english', 'french', 'spanish', 'korean', 'german']}
+              innerRef={this.language}
             />
           </div>
           <div className="add-form__age">
-            {/* <span className="switch__title"></span> */}
             <label className="switch" htmlFor="age">
               Age limit +18:
               <input type="checkbox" ref={this.ageLimit} id="age" />
               <span className="slider round" />
             </label>
           </div>
-          <div className="add-form__subtitles">
-            <label htmlFor="subtitles">
-              Subtitles:
-              <input type="checkbox" ref={this.subtitles} id="subtitles" />
+          <div className="add-form__video">
+            <label htmlFor="video">
+              Video:
+              <input type="checkbox" ref={this.video} id="video" />
             </label>
           </div>
           <div className="add-form__img">
@@ -251,7 +249,7 @@ class CardAddForm extends Component<MyProps, MyState> {
         </form>
         <div className="cards">
           {this.state.cards.map((card) => {
-            return <CardItem key={card.id} {...card} />;
+            return <CardItem movieId={card.id} key={card.id} image={card.poster_path} />;
           })}
         </div>
       </>
@@ -261,10 +259,10 @@ class CardAddForm extends Component<MyProps, MyState> {
 
 function OptionSet(props: { setOptions: string[]; innerRef: React.RefObject<HTMLSelectElement> }) {
   return (
-    <select ref={props.innerRef} id="genres">
+    <select ref={props.innerRef} id="language">
       {props.setOptions.map((option) => {
         return (
-          <option key={option} value={option} data-testid={option}>
+          <option key={option} value={option} data-testid={option} >
             {option}
           </option>
         );

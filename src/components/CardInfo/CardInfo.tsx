@@ -11,7 +11,7 @@ class CardInfo extends Component<MyProps> {
 
   getTextedGenres = () => {
     if (this.props.currentMovie) {
-      this.props.currentMovie.genre_ids.forEach((genre) => {
+      this.props.currentMovie.genre_ids?.forEach((genre) => {
         const match = genresList.find((o: IGenre) => o.id === genre);
         if (match) {
           this.textedGenres.push(match.name);
