@@ -1,15 +1,34 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import App from '../../App';
 import { BrowserRouter } from 'react-router-dom';
 
-describe('Card info popup', () => {
-  it('should render after click on card', async() => {
-    render(<BrowserRouter><App/></BrowserRouter>);
-    fireEvent.input(screen.getByRole('textbox'), { target: { value: 'The Witcher' } });
-    fireEvent.submit(screen.getByRole('button', {name: /search/i}));
-    const cards = await screen.findAllByRole('img');
-    fireEvent.click(cards[1]);
-    await waitFor(() => expect(screen.getByTestId('popup')).toBeInTheDocument());
+import { HomePage } from '../../pages/HomePage';
+import { fakeGenres, mockResponse } from '../../constants';
+import userEvent from '@testing-library/user-event';
+import * as constants from '../../App';
+
+describe('CardInfo', () => {
+  test('should render card info popup after click on card', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockResponse),
+      })
+    ) as jest.Mock;
+
+    Object.defineProperty(constants, 'genresList', {
+      value: fakeGenres.genres,
+    });
+
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    userEvent.type(screen.getByRole('textbox'), 'Witcher');
+    fireEvent.submit(screen.getByRole('button', { name: /search/i }));
+
+    userEvent.click(await screen.findByRole('img'));
+    await waitFor(() => expect(screen.getByText('Making The Witcher')).toBeInTheDocument());
   });
 });

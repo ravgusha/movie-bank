@@ -1,54 +1,9 @@
 import { screen, render, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
-import App from '../../App';
 import SearchForm from './SearchForm';
 import { HomePage } from '../../pages/HomePage';
-
-export const fakeLocalStorage = (function () {
-  let store: { [key: string]: string } = {};
-
-  return {
-    getItem: function (key: string) {
-      return store[key] || null;
-    },
-    setItem: function (key: string, value: string) {
-      store[key] = value.toString();
-    },
-    removeItem: function (key: string) {
-      delete store[key];
-    },
-    clear: function () {
-      store = {};
-    },
-  };
-})();
-
-const mockResponse = {
-  page: 1,
-  results: [
-    {
-      adult: false,
-      backdrop_path: '/AfS7QTuDNIySoqcGyg9YFel3X3P.jpg',
-      genre_ids: [99],
-      id: 736759,
-      original_language: 'en',
-      original_title: 'Making The Witcher',
-      overview:
-        'Journey into the extraordinary world of "The Witcher" — from casting the roles to Jaskier\'s catchy song — in this behind-the-scenes look at the series. Go behind the monsters, the ballads and every bit of magic that went into bringing The Witcher\'s Continent to life.',
-      popularity: 19.964,
-      poster_path: '/zYnwBAUPQn5WmurROH1ravCC6Wp.jpg',
-      release_date: '2020-08-26',
-      title: 'Making The Witcher',
-      video: false,
-      vote_average: 7.7,
-      vote_count: 45,
-    },
-  ],
-  total_pages: 1,
-  total_results: 1,
-};
+import { fakeLocalStorage, mockResponse } from '../../constants';
 
 describe('Search form', () => {
   const handleSubmit = jest.fn();
