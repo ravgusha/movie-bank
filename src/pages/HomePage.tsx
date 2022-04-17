@@ -3,37 +3,25 @@ import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
 import CardList, { ApiCard } from '../components/CardList/CardList';
 import CardInfo from '../components/CardInfo/CardInfo';
-import Spinner from '../components/Spinner/Spinner'
-
+import Spinner from '../components/Spinner/Spinner';
+import apiKey from '../constants';
 interface MyState {
   movies: ApiCard[];
   searchTerm: string;
   currentMovie: ApiCard | null;
   fetchInProgress: boolean;
 }
+class HomePage extends Component<object, MyState> {
+  state = {
+    movies: [],
+    searchTerm: localStorage.getItem('inputValue') || '',
+    currentMovie: null,
+    fetchInProgress: false,
+  };
 
-interface MyProps {
-  apiKey?: string;
-}
-
-class HomePage extends Component<MyProps, MyState> {
-  apiKey: string;
-
-  constructor(props: MyProps) {
-    super(props);
-    this.state = {
-      movies: [],
-      searchTerm: localStorage.getItem('inputValue') || '',
-      currentMovie: null,
-      fetchInProgress: false,
-    };
-    this.componentCleanup = this.componentCleanup.bind(this);
-    this.apiKey = 'ec79681972e0c0a082743a6481ea4b2c';
-  }
-
-  componentCleanup() {
+  componentCleanup = () => {
     localStorage.setItem('inputValue', this.state.searchTerm);
-  }
+  };
 
   componentDidMount() {
     window.addEventListener('beforeunload', this.componentCleanup);
@@ -49,9 +37,9 @@ class HomePage extends Component<MyProps, MyState> {
 
   handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.setState({fetchInProgress: true });
+    this.setState({ fetchInProgress: true });
     fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&query=${this.state.searchTerm}`
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${this.state.searchTerm}`
     )
       .then((data) => data.json())
       .then((data) => {
@@ -67,7 +55,7 @@ class HomePage extends Component<MyProps, MyState> {
   viewCardInfo = (id: number) => {
     let filteredMovie = null;
     this.state.movies.forEach((movie) => {
-      if (movie.id == id) {
+      if (movie['id'] == id) {
         filteredMovie = movie;
       }
     });
@@ -85,8 +73,16 @@ class HomePage extends Component<MyProps, MyState> {
           <CardInfo closeCardInfo={this.closeCardInfo} currentMovie={this.state.currentMovie} />
         )}
         <MainText />
-        <SearchForm value={this.state.searchTerm} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
-        {this.state.fetchInProgress ? (<Spinner />) : (<CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />)}
+        <SearchForm
+          value={this.state.searchTerm}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+        />
+        {this.state.fetchInProgress ? (
+          <Spinner />
+        ) : (
+          <CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />
+        )}
       </div>
     );
   }

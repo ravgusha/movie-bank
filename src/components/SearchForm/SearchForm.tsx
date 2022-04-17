@@ -3,7 +3,7 @@ import './SearchForm.scss';
 interface MyProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  value: string;
+  value?: string;
 }
 class SearchForm extends Component<MyProps> {
   constructor(props: MyProps) {

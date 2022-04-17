@@ -25,7 +25,7 @@ class CardInfo extends Component<MyProps> {
 
     return (
       <div className="info" onClick={this.props.closeCardInfo}>
-        {this.props.currentMovie == null ? null : (
+        {!this.props.currentMovie ? null : (
           <div
             className="info__main"
             data-testid="popup"

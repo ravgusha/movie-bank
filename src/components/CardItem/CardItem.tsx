@@ -11,8 +11,8 @@ export type Card = {
 class CardItem extends Component<Card> {
   render() {
     return (
-      <li className="card">
-        {this.props.image == null ? (
+      <li className="card" data-testid={this.props.movieId}>
+        {this.props.image === null ? (
           <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
         ) : this.props.image.includes('blob') ? (
           <img

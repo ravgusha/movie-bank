@@ -6,6 +6,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
+import apiKey from './constants';
 
 import './App.scss';
 
@@ -16,10 +17,9 @@ export interface IGenre {
 }
 
 class App extends Component {
-  apiKey = 'ec79681972e0c0a082743a6481ea4b2c';
 
   getGenresList = () => {
-    fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${this.apiKey}`)
+    fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`)
       .then((data) => data.json())
       .then((data) => {
         genresList = data.genres;
