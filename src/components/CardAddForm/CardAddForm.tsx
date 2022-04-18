@@ -139,8 +139,6 @@ class CardAddForm extends Component<MyProps, MyState> {
       errors.poster = 'Please, add the poster';
     } else {
       this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
-      console.log(typeof this.poster.current.files[0], this.posterUrl)
-
     }
 
     this.setState({ errors: errors, disabled: this.checkIsError(errors) });
@@ -251,7 +249,6 @@ class CardAddForm extends Component<MyProps, MyState> {
         </form>
         <div className="cards">
           {this.state.cards.map((card) => {
-            console.log(card.id, card.poster_path)
             return <CardItem movieId={card.id} key={card.id} image={card.poster_path} />;
           })}
         </div>

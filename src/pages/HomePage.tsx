@@ -38,12 +38,16 @@ class HomePage extends Component<object, MyState> {
   handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     this.setState({ fetchInProgress: true });
+
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${this.state.searchTerm}`
     )
       .then((data) => data.json())
       .then((data) => {
         this.setState({ movies: [...data.results], fetchInProgress: false });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
