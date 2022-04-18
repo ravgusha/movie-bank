@@ -28,7 +28,8 @@ describe('CardInfo', () => {
     userEvent.type(screen.getByRole('textbox'), 'Witcher');
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
 
-    userEvent.click(await screen.findByRole('img'));
-    await waitFor(() => expect(screen.getByText('Making The Witcher')).toBeInTheDocument());
+    const cards = await screen.findAllByRole('img')
+    userEvent.click(cards[0]);
+    await waitFor(() => expect(screen.getByText(mockResponse.results[0].title)).toBeInTheDocument());
   });
 });

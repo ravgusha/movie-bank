@@ -11,14 +11,15 @@ describe('CardList', () => {
       })
     ) as jest.Mock;
 
-    const container = render(
+    render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     );
 
-    fireEvent.input(screen.getByRole('textbox'), { target: { value: 'The SpiderMan' } });
+    fireEvent.input(screen.getByRole('textbox'), { target: { value: 'The Witcher' } });
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
-    await waitFor(() => expect(container.getByTestId('cards')).toBeInTheDocument());
+    const items = await screen.findAllByRole('listitem');
+    await waitFor(() => expect(items).toHaveLength(3));
   });
 });

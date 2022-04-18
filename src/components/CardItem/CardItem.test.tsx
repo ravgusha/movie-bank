@@ -17,9 +17,9 @@ describe('Card item', () => {
         <App />
       </BrowserRouter>
     );
-    fireEvent.input(screen.getByRole('textbox'), { target: { value: 'The SpiderMan' } });
+    fireEvent.input(screen.getByRole('textbox'), { target: { value: 'The Witcher' } });
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
-    const item = await screen.findByRole('listitem');
-    await waitFor(() => expect(item).toBeTruthy());
+    const cards = await screen.findAllByRole('listitem');
+    await waitFor(() => expect(cards[1]).toBeInTheDocument());
   });
 });
