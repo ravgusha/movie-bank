@@ -44,7 +44,6 @@
 
   div {
     width: fit-content;
-    display: flex;
 
     label {
       font-size: 23px;
@@ -124,5 +123,6 @@
 
   .add-form__error {
     color: red;
+    align-items: center;
   }
 }

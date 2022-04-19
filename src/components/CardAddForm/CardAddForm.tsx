@@ -1,274 +1,181 @@
-import React, { Component, createRef } from 'react';
-import { v4 as uuid } from 'uuid';
-
-import CardItem from '../CardItem/CardItem';
-import { ApiCard } from '../CardList/CardList';
+import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import Select from 'react-select';
+import { useState } from 'react';
 
 import './CardAddForm.scss';
-interface MyState {
-  cards: ApiCard[];
-  errors: FieldsError;
-  disabled: true | false;
-  isFirstInput: boolean;
+import CardItem from '../CardItem/CardItem';
+import { ApiCard } from '../CardList/CardList';
+import { v4 as uuid } from 'uuid';
+
+interface ICardFields {
+  title: string;
+  date: string;
+  language: string;
+  ageLimit: boolean;
+  video: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  poster: any;
 }
 
-type Fields = 'title' | 'date' | 'language' | 'ageLimit' | 'video' | 'poster';
-type FieldsError = Record<Fields, string>;
-
-interface MyProps {
-  onSubmit?: () => void;
-}
-class CardAddForm extends Component<MyProps, MyState> {
-  private title: React.RefObject<HTMLInputElement>;
-  private date: React.RefObject<HTMLInputElement>;
-  private language: React.RefObject<HTMLSelectElement>;
-  private ageLimit: React.RefObject<HTMLInputElement>;
-  private video: React.RefObject<HTMLInputElement>;
-  private poster: React.RefObject<HTMLInputElement>;
-  private form: React.RefObject<HTMLFormElement>;
-
-  private posterUrl: string;
-  private year: string;
-  private vid: boolean;
-  private adultOnly: boolean;
-
-  constructor(props: MyProps) {
-    super(props);
-
-    this.state = {
-      cards: [],
-      errors: { title: '', date: '', language: '', ageLimit: '', video: '', poster: '' },
-      disabled: true,
-      isFirstInput: true,
-    };
-    this.title = createRef();
-    this.date = createRef();
-    this.language = createRef();
-    this.ageLimit = createRef();
-    this.video = createRef();
-    this.poster = createRef();
-    this.form = createRef();
-    this.posterUrl = '';
-    this.year = '2000';
-    this.adultOnly = false;
-    this.vid = false;
-  }
-
-  checkIsDisabled = () => {
-    if (this.state.isFirstInput) {
-      this.setState({ isFirstInput: false, disabled: false });
-    } else {
-      if (this.checkIsError(this.state.errors)) {
-        this.setState({ disabled: true });
-      } else {
-        this.setState({ disabled: false });
-      }
-    }
-  };
-
-  handleTitleChange = () => {
-    this.setState(
-      {
-        errors: { ...this.state.errors, title: '' },
-      },
-      () => {
-        this.checkIsDisabled();
-      }
-    );
-  };
-
-  handleDateChange = () => {
-    this.setState(
-      {
-        errors: { ...this.state.errors, date: '' },
-      },
-      () => {
-        this.checkIsDisabled();
-      }
-    );
-  };
-
-  handlePosterChange = () => {
-    this.setState(
-      {
-        errors: { ...this.state.errors, poster: '' },
-      },
-      () => {
-        this.checkIsDisabled();
-      }
-    );
-  };
-
-  checkIsFormValid = () => {
-    const errors: FieldsError = {
-      title: '',
-      date: '',
-      language: '',
-      ageLimit: '',
-      video: '',
-      poster: '',
-    };
-
-    if (!this.title?.current?.value) {
-      errors.title = 'Please, add the title';
-    }
-
-    if (!this.date?.current?.value) {
-      errors.date = 'Please, add the date';
-    } else {
-      this.year = new Date(this.date.current.value).getFullYear().toString();
-    }
-
-    if (!this.ageLimit.current) {
-      errors.ageLimit = 'ageLimit error';
-    } else {
-      this.adultOnly = this.ageLimit.current.checked;
-    }
-
-    if (!this.video.current) {
-      errors.video = 'video error';
-    } else {
-      this.vid = this.video.current.checked;
-    }
-
-    if (!this.poster.current?.files) {
-      return;
-    }
-
-    if (!this.poster?.current?.files[0]) {
-      errors.poster = 'Please, add the poster';
-    } else {
-      this.posterUrl = URL.createObjectURL(this.poster.current.files[0]);
-    }
-
-    this.setState({ errors: errors, disabled: this.checkIsError(errors) });
-
-    return !this.checkIsError(errors);
-  };
-
-  checkIsError = (errors: FieldsError) => {
-    let isError = false;
-    Object.values(errors).forEach((el) => {
-      if (el) {
-        isError = true;
-      }
-    });
-    return isError;
-  };
-
-  handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (this.checkIsFormValid()) {
-      const unique_id = uuid();
-      const small_id = Number(unique_id.replace(/\D/g, ""));
-      this.setState({
-        cards: [
-          ...this.state.cards,
-          {
-            title: this.title.current?.value ?? '',
-            release_date: this.year,
-            original_language: this.language.current?.value ?? '',
-            adult: this.adultOnly,
-            video: this.vid,
-            poster_path: this.posterUrl,
-            id: small_id,
-          },
-        ],
-      });
-      this.form.current?.reset();
-    }
-  };
-
-  render() {
-    return (
-      <>
-        <form
-          className="add-form"
-          id="createCardCont"
-          onSubmit={this.handleSubmit}
-          data-testid="form"
-          ref={this.form}
-        >
-          <div className="add-form__title">
-            <label htmlFor="addTitle">Title:</label>
-            <input
-              type="text"
-              id="addTitle"
-              maxLength={20}
-              ref={this.title}
-              onChange={this.handleTitleChange}
-              data-testid="title"
-            />
-            <div className="add-form__error">{this.state.errors.title}</div>
-          </div>
-          <div className="add-form__date">
-            <label htmlFor="addDate">Release date:</label>
-            <input
-              type="date"
-              id="addDate"
-              data-testid="ageCheckbox"
-              ref={this.date}
-              onChange={this.handleDateChange}
-            />
-            <div className="add-form__error">{this.state.errors.date}</div>
-          </div>
-          <div className="add-form__language">
-            <label htmlFor="language">Original language:</label>
-            <OptionSet
-              setOptions={['russian', 'english', 'french', 'spanish', 'korean', 'german']}
-              innerRef={this.language}
-            />
-          </div>
-          <div className="add-form__age">
-            <label className="switch" htmlFor="age">
-              Age limit +18:
-              <input type="checkbox" ref={this.ageLimit} id="age" />
-              <span className="slider round" />
-            </label>
-          </div>
-          <div className="add-form__video">
-            <label htmlFor="video">
-              Video:
-              <input type="checkbox" ref={this.video} id="video" />
-            </label>
-          </div>
-          <div className="add-form__img">
-            <label htmlFor="fileUpload">Add poster</label>
-            <input
-              type="file"
-              id="fileUpload"
-              title=" "
-              accept="image/jpeg"
-              ref={this.poster}
-              onChange={this.handlePosterChange}
-            />
-          </div>
-          <div className="add-form__error">{this.state.errors.poster}</div>
-          <input type="submit" disabled={this.state.disabled} />
-        </form>
-        <div className="cards">
-          {this.state.cards.map((card) => {
-            return <CardItem movieId={card.id} key={card.id} image={card.poster_path} />;
-          })}
-        </div>
-      </>
-    );
-  }
+const options: IOption[] = [
+  { value: 'russian', label: 'russian' },
+  { value: 'english', label: 'english' },
+  { value: 'french', label: 'french' },
+  { value: 'spanish', label: 'spanish' },
+  { value: 'korean', label: 'korean' },
+  { value: 'german', label: 'german' },
+];
+interface IOption {
+  value: string;
+  label: string;
 }
 
-function OptionSet(props: { setOptions: string[]; innerRef: React.RefObject<HTMLSelectElement> }) {
+
+const CardAddForm = () => {
+  const [cards, setCards] = useState<ApiCard[]>();
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ICardFields>();
+
+  const onSubmit: SubmitHandler<ICardFields> = (data) => {
+    console.log(data.title, data.date, data.language, data.ageLimit, data.video, data.poster);
+    const unique_id = uuid();
+    const small_id = Number(unique_id.replace(/\D/g, ''));
+    const posterUrl = window.URL.createObjectURL(data.poster[0]);
+
+    setCards(
+
+     cards ? [...cards,
+        {
+          title: data.title,
+          release_date: data.date,
+          original_language: data.language,
+          adult: data.ageLimit,
+          video: data.video,
+          poster_path: posterUrl,
+          id: small_id,
+        },
+      ] : [
+        {
+          title: data.title,
+          release_date: data.date,
+          original_language: data.language,
+          adult: data.ageLimit,
+          video: data.video,
+          poster_path: posterUrl,
+          id: small_id,
+        },
+      ] ,
+    );
+    reset();
+  };
+
+  const getValue = (value: string) =>
+    value ? options.find((option) => option.value === value) : '';
+
   return (
-    <select ref={props.innerRef} id="language">
-      {props.setOptions.map((option) => {
-        return (
-          <option key={option} value={option} data-testid={option} >
-            {option}
-          </option>
-        );
-      })}
-    </select>
+    <>
+      <form
+        className="add-form"
+        id="createCardCont"
+        onSubmit={handleSubmit(onSubmit)}
+        data-testid="form"
+        // ref={ form}
+      >
+        <div className="add-form__title">
+          <label htmlFor="addTitle">Title:</label>
+          <input
+            type="text"
+            id="addTitle"
+            {...register('title', {
+              required: true,
+              maxLength: 25,
+            })}
+            data-testid="title"
+          />
+          {errors?.title && errors.title.type === 'required' && (
+            <div className="add-form__error">Field is required</div>
+          )}
+          {errors?.title && errors.title.type === 'maxLength' && (
+            <div className="add-form__error">Max length is 25</div>
+          )}
+        </div>
+        <div className="add-form__date">
+          <label htmlFor="addDate">Release date:</label>
+          <input
+            type="date"
+            id="addDate"
+            data-testid="ageCheckbox"
+            {...register('date', {
+              required: true,
+              // valueAsDate: true
+            })}
+          />
+          {errors?.date && errors.date.type === 'required' && (
+            <div className="add-form__error">Field is required</div>
+          )}
+        </div>
+        <div className="add-form__language">
+          <label htmlFor="language">Original language:</label>
+          <Controller
+            control={control}
+            name="language"
+            rules={{
+              required: 'Field is required',
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <div>
+                <Select
+                  placeholder="Language"
+                  options={options}
+                  value={getValue(value)}
+                  onChange={(newValue) => onChange((newValue as IOption).value)}
+                />
+                {error && <div style={{ color: 'red' }}>{error.message}</div>}
+              </div>
+            )}
+          />
+        </div>
+        <div className="add-form__age">
+          <label className="switch" htmlFor="age">
+            Age limit +18:
+            <input type="checkbox" id="age" {...register('ageLimit')} />
+            <span className="slider round" />
+          </label>
+        </div>
+        <div className="add-form__video">
+          <label htmlFor="video">
+            Video:
+            <input type="checkbox" id="video" {...register('video')} />
+          </label>
+        </div>
+        <div className="add-form__img">
+          <label htmlFor="fileUpload">Add poster</label>
+          <input
+            type="file"
+            id="fileUpload"
+            title=" "
+            accept="image/jpeg"
+            {...register('poster')}
+          />
+        </div>
+        {/* <div className="add-form__error">{state.errors.poster}</div> */}
+        <input type="submit" />
+      </form>
+      <div className="cards">
+        {cards
+          ? cards.map((card) => {
+              return <CardItem movieId={card.id} key={card.id} image={card.poster_path} />;
+            })
+          : null}
+      </div>
+    </>
   );
-}
+};
 
 export default CardAddForm;
