@@ -1,4 +1,4 @@
-import { render, screen, fireEvent} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CardAddForm from './CardAddForm';
 
@@ -33,7 +33,7 @@ describe('Card add form', () => {
 
     fireEvent.submit(screen.getByRole('button', { name: /submit/i }));
 
-    expect(screen.getByRole('img'));
+    waitFor(() => expect(screen.getByRole('img')));
   });
 });
 
@@ -46,11 +46,11 @@ function getDate() {
 }
 
 function getSelectGenre() {
-  return screen.getByRole('combobox', { name: /original language:/i });
+  return screen.getByRole('combobox');
 }
 
 function getAgeLimitCheckbox() {
-  return screen.getByRole('checkbox', {name: /age limit \+18:/i})
+  return screen.getByRole('checkbox', { name: /age limit \+18:/i });
 }
 
 function getSubtitlesCheckbox() {

@@ -6,15 +6,13 @@ import './CardAddForm.scss';
 import CardItem from '../CardItem/CardItem';
 import { ApiCard } from '../CardList/CardList';
 import { v4 as uuid } from 'uuid';
-
 interface ICardFields {
   title: string;
   date: string;
   language: string;
   ageLimit: boolean;
   video: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  poster: any;
+  poster: FileList;
 }
 
 const options: IOption[] = [
@@ -29,7 +27,6 @@ interface IOption {
   value: string;
   label: string;
 }
-
 
 const CardAddForm = () => {
   const [cards, setCards] = useState<ApiCard[]>();
@@ -49,7 +46,6 @@ const CardAddForm = () => {
     const posterUrl = window.URL.createObjectURL(data.poster[0]);
 
     setCards(
-
      cards ? [...cards,
         {
           title: data.title,
@@ -85,7 +81,6 @@ const CardAddForm = () => {
         id="createCardCont"
         onSubmit={handleSubmit(onSubmit)}
         data-testid="form"
-        // ref={ form}
       >
         <div className="add-form__title">
           <label htmlFor="addTitle">Title:</label>
@@ -161,10 +156,14 @@ const CardAddForm = () => {
             id="fileUpload"
             title=" "
             accept="image/jpeg"
-            {...register('poster')}
+            {...register('poster', {
+              required: true,
+            })}
           />
+          {errors?.poster && errors.poster.type === 'required' && (
+            <div className="add-form__error">Field is required</div>
+          )}
         </div>
-        {/* <div className="add-form__error">{state.errors.poster}</div> */}
         <input type="submit" />
       </form>
       <div className="cards">
