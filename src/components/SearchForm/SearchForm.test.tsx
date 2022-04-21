@@ -56,6 +56,6 @@ describe('Search form', () => {
     userEvent.type(screen.getByRole('textbox'), 'The Witcher');
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
 
-    waitFor(() => expect(screen.getByTestId('spinner')).toBeInTheDocument());
+    waitFor(() => expect(screen.findByTestId('spinner')).toBeInTheDocument());
   });
 });

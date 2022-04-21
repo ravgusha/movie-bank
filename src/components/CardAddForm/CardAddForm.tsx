@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { useState } from 'react';
+import moment from 'moment';
 
 import './CardAddForm.scss';
 import CardItem from '../CardItem/CardItem';
@@ -45,19 +46,18 @@ const CardAddForm = () => {
     const small_id = Number(unique_id.replace(/\D/g, ''));
     const posterUrl = window.URL.createObjectURL(data.poster[0]);
 
-    setCards(
-    [...cards,
-        {
-          title: data.title,
-          release_date: data.date,
-          original_language: data.language,
-          adult: data.ageLimit,
-          video: data.video,
-          poster_path: posterUrl,
-          id: small_id,
-        },
-      ]
-    );
+    setCards([
+      ...cards,
+      {
+        title: data.title,
+        release_date: data.date,
+        original_language: data.language,
+        adult: data.ageLimit,
+        video: data.video,
+        poster_path: posterUrl,
+        id: small_id,
+      },
+    ]);
     reset();
   };
 
@@ -84,7 +84,7 @@ const CardAddForm = () => {
             data-testid="title"
           />
           {errors?.title && errors.title.type === 'required' && (
-            <div className="add-form__error">Field is required</div>
+            <div className="add-form__error">Title is required</div>
           )}
           {errors?.title && errors.title.type === 'maxLength' && (
             <div className="add-form__error">Max length is 25</div>
@@ -98,11 +98,14 @@ const CardAddForm = () => {
             data-testid="ageCheckbox"
             {...register('date', {
               required: true,
-              // valueAsDate: true
+              max: moment().format("YYYY-MM-DD"),
             })}
           />
           {errors?.date && errors.date.type === 'required' && (
-            <div className="add-form__error">Field is required</div>
+            <div className="add-form__error">Date is required</div>
+          )}
+          {errors?.date && errors.date.type === 'max' && (
+            <div className="add-form__error">Date cannot be in the future</div>
           )}
         </div>
         <div className="add-form__language">
@@ -111,9 +114,9 @@ const CardAddForm = () => {
             control={control}
             name="language"
             rules={{
-              required: 'Field is required',
+              required: true,
             }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+            render={({ field: { onChange, value }}) => (
               <div>
                 <Select
                   placeholder="Language"
@@ -121,7 +124,9 @@ const CardAddForm = () => {
                   value={getValue(value)}
                   onChange={(newValue) => onChange((newValue as IOption).value)}
                 />
-                {error && <div style={{ color: 'red' }}>{error.message}</div>}
+                {errors?.language && errors.language.type === 'required' && (
+                  <div className="add-form__error">Language is required</div>
+                )}
               </div>
             )}
           />
@@ -151,7 +156,7 @@ const CardAddForm = () => {
             })}
           />
           {errors?.poster && errors.poster.type === 'required' && (
-            <div className="add-form__error">Field is required</div>
+            <div className="add-form__error">Poster is required</div>
           )}
         </div>
         <input type="submit" />
