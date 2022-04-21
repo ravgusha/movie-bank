@@ -1,95 +1,78 @@
-import { ChangeEvent, Component, FormEvent } from 'react';
+import { ChangeEvent, useState, FormEvent, useEffect } from 'react';
+
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
 import CardList, { ApiCard } from '../components/CardList/CardList';
 import CardInfo from '../components/CardInfo/CardInfo';
 import Spinner from '../components/Spinner/Spinner';
 import apiKey from '../constants';
-interface MyState {
-  movies: ApiCard[];
-  searchTerm: string;
-  currentMovie: ApiCard | null;
-  fetchInProgress: boolean;
-}
-class HomePage extends Component<object, MyState> {
-  state = {
-    movies: [],
-    searchTerm: localStorage.getItem('inputValue') || '',
-    currentMovie: null,
-    fetchInProgress: false,
+
+const HomePage = () => {
+  const [movies, setMovies] = useState<ApiCard[]>([]);
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem('inputValue') || '');
+  const [currentMovie, setCurrentMovie] = useState(null);
+  const [fetchInProgress, setFetchInProgress] = useState(false);
+
+  const componentCleanup = () => {
+    localStorage.setItem('inputValue', searchTerm);
   };
 
-  componentCleanup = () => {
-    localStorage.setItem('inputValue', this.state.searchTerm);
-  };
+  useEffect(() => {
+    window.addEventListener('beforeunload', componentCleanup);
+    setSearchTerm(localStorage.getItem('inputValue') || '');
+  }, []);
 
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.componentCleanup);
-    this.setState({
-      searchTerm: localStorage.getItem('inputValue') || '',
-    });
-  }
+  useEffect(() => {
+    return () => {
+      componentCleanup();
+      window.removeEventListener('beforeunload', componentCleanup);
+    };
+  }, [searchTerm]);
 
-  componentWillUnmount() {
-    this.componentCleanup();
-    window.removeEventListener('beforeunload', this.componentCleanup);
-  }
-
-  handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.setState({ fetchInProgress: true });
+    setFetchInProgress(true);
 
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${this.state.searchTerm}`
-    )
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}`)
       .then((data) => data.json())
       .then((data) => {
-        this.setState({ movies: [...data.results], fetchInProgress: false });
+        setMovies([...data.results]);
+        setFetchInProgress(false);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    this.setState({ searchTerm: e.target.value });
+    setSearchTerm(e.target.value);
   };
 
-  viewCardInfo = (id: number) => {
+  const viewCardInfo = (id: number) => {
     let filteredMovie = null;
-    this.state.movies.forEach((movie) => {
+    movies.forEach((movie) => {
       if (movie['id'] == id) {
         filteredMovie = movie;
       }
     });
-    this.setState({ currentMovie: filteredMovie });
+    setCurrentMovie(filteredMovie);
   };
 
-  closeCardInfo = () => {
-    this.setState({ currentMovie: null });
+  const closeCardInfo = () => {
+    setCurrentMovie(null);
   };
 
-  render() {
-    return (
-      <div>
-        {this.state.currentMovie === null ? null : (
-          <CardInfo closeCardInfo={this.closeCardInfo} currentMovie={this.state.currentMovie} />
-        )}
-        <MainText />
-        <SearchForm
-          value={this.state.searchTerm}
-          handleSubmit={this.handleSubmit}
-          handleChange={this.handleChange}
-        />
-        {this.state.fetchInProgress ? (
-          <Spinner />
-        ) : (
-          <CardList movies={this.state.movies} viewCardInfo={this.viewCardInfo} />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {currentMovie === null ? null : (
+        <CardInfo closeCardInfo={closeCardInfo} currentMovie={currentMovie} />
+      )}
+      <MainText />
+      <SearchForm value={searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
+      {fetchInProgress ? <Spinner /> : <CardList movies={movies} viewCardInfo={viewCardInfo} />}
+    </div>
+  );
+};
 
 export { HomePage };

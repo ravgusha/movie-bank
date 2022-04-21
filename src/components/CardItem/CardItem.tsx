@@ -1,37 +1,34 @@
-import { Component } from 'react';
 import './CardItem.scss';
 
-export type Card = {
+export type ICardItem = {
   image: string;
   key: number;
   movieId: number;
   viewCardInfo?: (id: number) => void;
 };
 
-class CardItem extends Component<Card> {
-  render() {
+const CardItem = ({viewCardInfo, movieId, image}: ICardItem) =>  {
     return (
-      <li className="card" data-testid={this.props.movieId}>
-        {!this.props.image ? (
+      <li className="card" data-testid={movieId}>
+        {!image ? (
           <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
-        ) : this.props.image.includes('blob') ? (
+        ) : image.includes('blob') ? (
           <img
-            src={`${this.props.image}`}
+            src={`${image}`}
             onClick={() => {
-              if (this.props.viewCardInfo) this.props.viewCardInfo(this.props.movieId);
+              if (viewCardInfo) viewCardInfo(movieId);
             }}
           />
         ) : (
           <img
-            src={`https://image.tmdb.org/t/p/w200${this.props.image}`}
+            src={`https://image.tmdb.org/t/p/w200${image}`}
             onClick={() => {
-              if (this.props.viewCardInfo) this.props.viewCardInfo(this.props.movieId);
+              if (viewCardInfo) viewCardInfo(movieId);
             }}
           />
         )}
       </li>
     );
-  }
 }
 
 export default CardItem;

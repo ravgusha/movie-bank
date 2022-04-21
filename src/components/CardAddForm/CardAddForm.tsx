@@ -29,7 +29,7 @@ interface IOption {
 }
 
 const CardAddForm = () => {
-  const [cards, setCards] = useState<ApiCard[]>();
+  const [cards, setCards] = useState<ApiCard[]>([]);
 
   const {
     register,
@@ -46,7 +46,7 @@ const CardAddForm = () => {
     const posterUrl = window.URL.createObjectURL(data.poster[0]);
 
     setCards(
-     cards ? [...cards,
+    [...cards,
         {
           title: data.title,
           release_date: data.date,
@@ -56,17 +56,7 @@ const CardAddForm = () => {
           poster_path: posterUrl,
           id: small_id,
         },
-      ] : [
-        {
-          title: data.title,
-          release_date: data.date,
-          original_language: data.language,
-          adult: data.ageLimit,
-          video: data.video,
-          poster_path: posterUrl,
-          id: small_id,
-        },
-      ] ,
+      ]
     );
     reset();
   };

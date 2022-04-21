@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import { Component } from 'react';
 
 import Header from './components/Header/Header';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -16,9 +15,8 @@ export interface IGenre {
   name: string;
 }
 
-class App extends Component {
-
-  getGenresList = () => {
+const App = () => {
+  const getGenresList = () => {
     fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`)
       .then((data) => data.json())
       .then((data) => {
@@ -26,8 +24,7 @@ class App extends Component {
       });
   };
 
-  render() {
-    this.getGenresList();
+  getGenresList();
     return (
       <div className="container">
         <Header />
@@ -39,7 +36,6 @@ class App extends Component {
         </Routes>
       </div>
     );
-  }
 }
 
 export default App;

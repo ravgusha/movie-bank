@@ -1,10 +1,8 @@
-import { Component} from 'react';
 import { Link } from 'react-router-dom';
 
 import './Header.scss';
-class Header extends Component {
 
-  render() {
+const Header = () =>{
     return (
       <header className="header" data-testid="header">
         <div className="header__logo">Movie Bank</div>
@@ -13,11 +11,10 @@ class Header extends Component {
           <Link to="/about">About Us</Link>
         </div>
         <div className="header__create-form">
-        <Link to="add">Create Card</Link>
+          <Link to="add">Create Card</Link>
         </div>
       </header>
     );
-  }
 }
 
 export default Header;

@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import './CardList.scss';
 import CardItem from '../CardItem/CardItem';
 export interface ApiCard {
@@ -17,24 +16,19 @@ export interface ApiCard {
   vote_average?: number;
   vote_count?: number;
 }
-interface MyProps {
+interface ICardList {
   movies: ApiCard[];
   viewCardInfo: (id: number) => void;
 }
 
-class CardList extends Component<MyProps> {
-  constructor(props: MyProps) {
-    super(props);
-  }
-
-  render() {
+const CardList = ({movies, viewCardInfo}: ICardList) => {
     return (
       <ul data-testid="cards" className="cards">
-        {this.props.movies.map((movie, i) => {
+        {movies.map((movie, i) => {
           return (
             <CardItem
               key={i}
-              viewCardInfo={this.props.viewCardInfo}
+              viewCardInfo={viewCardInfo}
               movieId={movie.id}
               image={movie.poster_path}
             />
@@ -42,7 +36,6 @@ class CardList extends Component<MyProps> {
         })}
       </ul>
     );
-  }
 }
 
 export default CardList;
