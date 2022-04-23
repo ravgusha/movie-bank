@@ -23,7 +23,7 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
 
   return (
     <div className="info" onClick={closeCardInfo}>
-      {!currentMovie ? null : (
+      {currentMovie ? (
         <div
           className="info__main"
           data-testid="popup"
@@ -54,7 +54,7 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

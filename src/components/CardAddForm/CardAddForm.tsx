@@ -98,7 +98,7 @@ const CardAddForm = () => {
             data-testid="ageCheckbox"
             {...register('date', {
               required: true,
-              max: moment().format("YYYY-MM-DD"),
+              max: moment().format('YYYY-MM-DD'),
             })}
           />
           {errors?.date && errors.date.type === 'required' && (
@@ -116,7 +116,7 @@ const CardAddForm = () => {
             rules={{
               required: true,
             }}
-            render={({ field: { onChange, value }}) => (
+            render={({ field: { onChange, value } }) => (
               <div>
                 <Select
                   placeholder="Language"

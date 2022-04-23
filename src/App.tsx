@@ -17,7 +17,7 @@ export interface IGenre {
 
 const App = () => {
   const getGenresList = () => {
-    fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`)
+    fetch(`https://thingproxy.freeboard.io/fetch/https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`)
       .then((data) => data.json())
       .then((data) => {
         genresList = data.genres;
