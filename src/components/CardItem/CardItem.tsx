@@ -13,9 +13,16 @@ class CardItem extends Component<Card> {
     return (
       <li className="card" data-testid={this.props.movieId}>
         {!this.props.image ? (
-          <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
+          <img
+            data-testid="card"
+            src={`${process.env.PUBLIC_URL}/noImage.jpg`}
+            onClick={() => {
+              if (this.props.viewCardInfo) this.props.viewCardInfo(this.props.movieId);
+            }}
+          />
         ) : this.props.image.includes('blob') ? (
           <img
+            data-testid="card"
             src={`${this.props.image}`}
             onClick={() => {
               if (this.props.viewCardInfo) this.props.viewCardInfo(this.props.movieId);
@@ -23,6 +30,7 @@ class CardItem extends Component<Card> {
           />
         ) : (
           <img
+            data-testid="card"
             src={`https://image.tmdb.org/t/p/w200${this.props.image}`}
             onClick={() => {
               if (this.props.viewCardInfo) this.props.viewCardInfo(this.props.movieId);

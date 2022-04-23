@@ -28,7 +28,7 @@ describe('CardInfo', () => {
     userEvent.type(screen.getByRole('textbox'), 'Witcher');
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
 
-    const cards = await screen.findAllByRole('img')
+    const cards = await screen.findAllByTestId('card');
     userEvent.click(cards[0]);
     await waitFor(() => expect(screen.getByText(mockResponse.results[0].title)).toBeInTheDocument());
   });

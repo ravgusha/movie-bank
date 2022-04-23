@@ -33,7 +33,7 @@ describe('Card add form', () => {
 
     fireEvent.submit(screen.getByRole('button', { name: /submit/i }));
 
-    expect(screen.getByRole('img'));
+    expect(screen.getByTestId('card'));
   });
 });
 

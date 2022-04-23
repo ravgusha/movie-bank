@@ -49,7 +49,7 @@ class CardAddForm extends Component<MyProps, MyState> {
     this.poster = createRef();
     this.form = createRef();
     this.posterUrl = '';
-    this.year = '2000';
+    this.year = '';
     this.adultOnly = false;
     this.vid = false;
   }
@@ -161,7 +161,7 @@ class CardAddForm extends Component<MyProps, MyState> {
 
     if (this.checkIsFormValid()) {
       const unique_id = uuid();
-      const small_id = Number(unique_id.replace(/\D/g, ""));
+      const small_id = Number(unique_id.replace(/\D/g, "").slice(0, 5));
       this.setState({
         cards: [
           ...this.state.cards,
@@ -249,7 +249,7 @@ class CardAddForm extends Component<MyProps, MyState> {
         </form>
         <div className="cards">
           {this.state.cards.map((card) => {
-            return <CardItem movieId={card.id} key={card.id} image={card.poster_path} />;
+            return <CardItem movieId={card.id} key={card.id} image={card.poster_path}/>;
           })}
         </div>
       </>
