@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import SearchForm from './SearchForm';
 import { HomePage } from '../../pages/HomePage';
-import { fakeLocalStorage } from '../../constants';
+import apiKey, { fakeLocalStorage, mockResponse } from '../../constants';
+import { BrowserRouter } from 'react-router-dom';
 
 describe('Search form', () => {
   const handleSubmit = jest.fn();
@@ -56,6 +57,47 @@ describe('Search form', () => {
     userEvent.type(screen.getByRole('textbox'), 'The Witcher');
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
 
-    waitFor(() => expect(screen.findByTestId('spinner')).toBeInTheDocument());
+    waitFor(async () => expect(await screen.findByTestId('spinner')).toBeInTheDocument());
+  });
+
+  test('expect to API call resolve', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockResponse),
+      })
+    ) as jest.Mock;
+
+    render(<HomePage />);
+    userEvent.type(screen.getByRole('textbox'), 'Witcher');
+    fireEvent.submit(screen.getByRole('button', { name: /search/i }));
+    expect(screen.getByRole('textbox')).toHaveValue('Witcher');
+    expect(fetch).toHaveBeenCalled();
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(
+      `https://api.themoviedb.org/3/search/movie?api_key=ec79681972e0c0a082743a6481ea4b2c&query=Witcher`
+    );
+    await waitFor(() => expect(screen.getByTestId('736759')).toBeInTheDocument());
+    userEvent.clear(screen.getByRole('textbox'));
+  });
+
+  test('expect to API call reject', async () => {
+    global.fetch = jest.fn(() => Promise.reject({ Error: 404 }));
+
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    userEvent.type(screen.getByRole('textbox'), 'Witcher');
+    fireEvent.submit(screen.getByRole('button', { name: /search/i }));
+
+    expect(fetch).toHaveBeenCalled();
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=Witcher`
+    );
+
+    expect(screen.queryByRole('listitem')).toBeNull();
   });
 });

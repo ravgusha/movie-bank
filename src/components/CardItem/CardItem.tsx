@@ -13,6 +13,7 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
       {image ? (
         image.includes('blob') ? (
           <img
+            data-testid="card"
             src={`${image}`}
             onClick={() => {
               if (viewCardInfo) viewCardInfo(movieId);
@@ -20,6 +21,7 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
           />
         ) : (
           <img
+            data-testid="card"
             src={`https://image.tmdb.org/t/p/w200${image}`}
             onClick={() => {
               if (viewCardInfo) viewCardInfo(movieId);
@@ -28,6 +30,7 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
         )
       ) : (
         <img
+          data-testid="card"
           src={`${process.env.PUBLIC_URL}/noImage.jpg`}
           onClick={() => {
             if (viewCardInfo) viewCardInfo(movieId);

@@ -1,5 +1,4 @@
-import { SubmitHandler, useForm, Controller } from 'react-hook-form';
-import Select from 'react-select';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import moment from 'moment';
 
@@ -16,25 +15,11 @@ interface ICardFields {
   poster: FileList;
 }
 
-const options: IOption[] = [
-  { value: 'russian', label: 'russian' },
-  { value: 'english', label: 'english' },
-  { value: 'french', label: 'french' },
-  { value: 'spanish', label: 'spanish' },
-  { value: 'korean', label: 'korean' },
-  { value: 'german', label: 'german' },
-];
-interface IOption {
-  value: string;
-  label: string;
-}
-
 const CardAddForm = () => {
   const [cards, setCards] = useState<ApiCard[]>([]);
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -61,8 +46,6 @@ const CardAddForm = () => {
     reset();
   };
 
-  const getValue = (value: string) =>
-    value ? options.find((option) => option.value === value) : '';
 
   return (
     <>
@@ -110,26 +93,20 @@ const CardAddForm = () => {
         </div>
         <div className="add-form__language">
           <label htmlFor="language">Original language:</label>
-          <Controller
-            control={control}
-            name="language"
-            rules={{
+          <select
+            {...register('language', {
               required: true,
-            }}
-            render={({ field: { onChange, value } }) => (
-              <div>
-                <Select
-                  placeholder="Language"
-                  options={options}
-                  value={getValue(value)}
-                  onChange={(newValue) => onChange((newValue as IOption).value)}
-                />
-                {errors?.language && errors.language.type === 'required' && (
-                  <div className="add-form__error">Language is required</div>
-                )}
-              </div>
-            )}
-          />
+              validate: (fileList) => Boolean(fileList[0]),
+            })}
+            data-testid="language"
+          >
+            <option value="russian">russian</option>
+            <option value="english">english</option>
+            <option value="german">german</option>
+          </select>
+          {errors?.language && errors.language.type === 'required' && (
+            <div className="add-form__error">Language is required</div>
+          )}
         </div>
         <div className="add-form__age">
           <label className="switch" htmlFor="age">

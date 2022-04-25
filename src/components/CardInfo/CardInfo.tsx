@@ -40,7 +40,7 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
           </div>
           <div className="info__text">
             <div className="info__header">
-              <span onClick={closeCardInfo}>X</span>
+              <span onClick={closeCardInfo} data-testid="closeBtn">X</span>
               <p className="info__title">{currentMovie.title}</p>
               <div className="info__subtitles">
                 <p>{currentMovie.release_date}</p>
