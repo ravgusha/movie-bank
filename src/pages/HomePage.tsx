@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useReducer } from 'react';
 
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
@@ -7,24 +7,63 @@ import CardInfo from '../components/CardInfo/CardInfo';
 import Spinner from '../components/Spinner/Spinner';
 import apiKey from '../constants';
 
+type ActionType =
+  | { type: 'searchRequest' }
+  | { type: 'searchSuccess'; data: ApiCard[] }
+  | { type: 'searchTerm'; data: string }
+  | { type: 'currentMovie'; data: null | ApiCard };
+
+interface IState {
+  movies: ApiCard[];
+  searchTerm: string;
+  currentMovie: null | ApiCard;
+  fetchInProgress: boolean;
+}
+const reducer = (state: IState, action: ActionType) => {
+  switch (action.type) {
+    case 'searchRequest':
+      return {
+        ...state,
+        fetchInProgress: true,
+      };
+    case 'searchSuccess':
+      return {
+        ...state,
+        movies: action.data,
+        fetchInProgress: false,
+      };
+    case 'searchTerm':
+      return {
+        ...state,
+        searchTerm: action.data,
+      };
+    case 'currentMovie':
+      return {
+        ...state,
+        currentMovie: action.data,
+      };
+  }
+};
+
 const HomePage = () => {
-  const [movies, setMovies] = useState<ApiCard[]>([]);
-  const [searchTerm, setSearchTerm] = useState(localStorage.getItem('inputValue') || '');
-  const [currentMovie, setCurrentMovie] = useState(null);
-  const [fetchInProgress, setFetchInProgress] = useState(false);
+  const [data, dispatch] = useReducer(reducer, {
+    movies: [],
+    searchTerm: '',
+    currentMovie: null,
+    fetchInProgress: false,
+  });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!searchTerm) {
+    if (!data.searchTerm) {
       return;
     } else {
-      setFetchInProgress(true);
-      fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}`)
+      dispatch({ type: 'searchRequest' });
+      fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}`)
         .then((data) => data.json())
         .then((data) => {
-          setMovies([...data.results]);
-          setFetchInProgress(false);
+          dispatch({ type: 'searchSuccess', data: [...data.results] });
         })
         .catch((error) => {
           console.log(error);
@@ -34,30 +73,36 @@ const HomePage = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setSearchTerm(e.target.value);
+    dispatch({ type: 'searchTerm', data: e.target.value });
     localStorage.setItem('inputValue', e.target.value);
   };
 
   const viewCardInfo = (id: number) => {
     let filteredMovie = null;
-    movies.forEach((movie) => {
+    data.movies.forEach((movie) => {
       if (movie['id'] === id) {
         filteredMovie = movie;
       }
     });
-    setCurrentMovie(filteredMovie);
+    dispatch({ type: 'currentMovie', data: filteredMovie });
   };
 
   const closeCardInfo = () => {
-    setCurrentMovie(null);
+    dispatch({ type: 'currentMovie', data: null });
   };
 
   return (
     <div>
-      {currentMovie ? <CardInfo closeCardInfo={closeCardInfo} currentMovie={currentMovie} /> : null}
+      {data.currentMovie ? (
+        <CardInfo closeCardInfo={closeCardInfo} currentMovie={data.currentMovie} />
+      ) : null}
       <MainText />
-      <SearchForm value={searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
-      {fetchInProgress ? <Spinner /> : <CardList movies={movies} viewCardInfo={viewCardInfo} />}
+      <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
+      {data.fetchInProgress ? (
+        <Spinner />
+      ) : (
+        <CardList movies={data.movies} viewCardInfo={viewCardInfo} />
+      )}
     </div>
   );
 };
