@@ -5,19 +5,24 @@ import SearchForm from '../components/SearchForm/SearchForm';
 import CardList, { ApiCard } from '../components/CardList/CardList';
 import CardInfo from '../components/CardInfo/CardInfo';
 import Spinner from '../components/Spinner/Spinner';
+import Pagination from '../components/Pagination/Pagination';
 import apiKey from '../constants';
 
 type ActionType =
   | { type: 'searchRequest' }
   | { type: 'searchSuccess'; data: ApiCard[] }
   | { type: 'searchTerm'; data: string }
-  | { type: 'currentMovie'; data: null | ApiCard };
+  | { type: 'currentMovie'; data: null | ApiCard }
+  | { type: 'currentPage'; data: number }
+  | { type: 'totalResults'; data: number };
 
 interface IState {
   movies: ApiCard[];
   searchTerm: string;
   currentMovie: null | ApiCard;
   fetchInProgress: boolean;
+  totalResults: number;
+  currentPage: number;
 }
 const reducer = (state: IState, action: ActionType) => {
   switch (action.type) {
@@ -42,6 +47,16 @@ const reducer = (state: IState, action: ActionType) => {
         ...state,
         currentMovie: action.data,
       };
+    case 'currentPage':
+      return {
+        ...state,
+        currentPage: action.data,
+      };
+      case 'totalResults':
+      return {
+        ...state,
+        totalResults: action.data,
+      };
   }
 };
 
@@ -51,6 +66,8 @@ const HomePage = () => {
     searchTerm: '',
     currentMovie: null,
     fetchInProgress: false,
+    totalResults: 0,
+    currentPage: 1,
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -64,6 +81,7 @@ const HomePage = () => {
         .then((data) => data.json())
         .then((data) => {
           dispatch({ type: 'searchSuccess', data: [...data.results] });
+          dispatch({ type: 'totalResults', data: data.total_results});
         })
         .catch((error) => {
           console.log(error);
@@ -75,6 +93,19 @@ const HomePage = () => {
     e.preventDefault();
     dispatch({ type: 'searchTerm', data: e.target.value });
     localStorage.setItem('inputValue', e.target.value);
+  };
+
+  const changePage = (pageNumber: number) => {
+    dispatch({ type: 'searchRequest' });
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&page=${pageNumber}`)
+      .then((data) => data.json())
+      .then((data) => {
+        dispatch({ type: 'searchSuccess', data: [...data.results] });
+        dispatch({ type: 'currentPage', data: data.page });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const viewCardInfo = (id: number) => {
@@ -91,6 +122,8 @@ const HomePage = () => {
     dispatch({ type: 'currentMovie', data: null });
   };
 
+  const numberOfPages = Math.floor(data.totalResults / 20)
+
   return (
     <div>
       {data.currentMovie ? (
@@ -103,6 +136,7 @@ const HomePage = () => {
       ) : (
         <CardList movies={data.movies} viewCardInfo={viewCardInfo} />
       )}
+      {data.totalResults > 20 ? <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage}/> : null}
     </div>
   );
 };
