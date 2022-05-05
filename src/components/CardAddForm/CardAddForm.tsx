@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 
 import './CardAddForm.scss';
@@ -15,6 +15,8 @@ interface ICardFields {
   poster: FileList;
 }
 
+export const createdCards: ApiCard[] = [];
+
 const CardAddForm = () => {
   const [cards, setCards] = useState<ApiCard[]>([]);
 
@@ -26,26 +28,28 @@ const CardAddForm = () => {
   } = useForm<ICardFields>();
 
   const onSubmit: SubmitHandler<ICardFields> = (data) => {
-    console.log(data.title, data.date, data.language, data.ageLimit, data.video, data.poster);
     const unique_id = uuid();
     const small_id = Number(unique_id.replace(/\D/g, ''));
     const posterUrl = window.URL.createObjectURL(data.poster[0]);
 
-    setCards([
-      ...cards,
-      {
-        title: data.title,
-        release_date: data.date,
-        original_language: data.language,
-        adult: data.ageLimit,
-        video: data.video,
-        poster_path: posterUrl,
-        id: small_id,
-      },
-    ]);
+    const newCard = {
+      title: data.title,
+      release_date: data.date,
+      original_language: data.language,
+      adult: data.ageLimit,
+      video: data.video,
+      poster_path: posterUrl,
+      id: small_id,
+    };
+
+    setCards([...cards, newCard]);
+    createdCards.push(newCard);
     reset();
   };
 
+  useEffect(() => {
+    setCards([...createdCards]);
+  }, []);
 
   return (
     <>

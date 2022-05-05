@@ -5,6 +5,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage, movies } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
+import { createdCards } from './components/CardAddForm/CardAddForm';
 import apiKey from './constants';
 
 import './App.scss';
@@ -18,7 +19,8 @@ export interface IGenre {
 }
 
 interface IGlobalContext {
-  movies: Array<ApiCard>;
+  movies?: Array<ApiCard>;
+  createdCards?: Array<ApiCard>;
 }
 
 export const GlobalContext = createContext<IGlobalContext>();
@@ -34,7 +36,7 @@ const App = () => {
 
   getGenresList();
     return (
-      <GlobalContext.Provider value={{ movies: movies }}>
+      <GlobalContext.Provider value={{ movies: movies, createdCards: createdCards }}>
       <div className="container">
         <Header />
         <Routes>
