@@ -1,16 +1,21 @@
-import { ApiCard } from '../CardList/CardList';
+import { useContext } from 'react';
+
 import { genresList, IGenre } from '../../App';
+import { Context } from '../../pages/HomePage';
+
 import './CardInfo.scss';
 interface ICardInfo {
   closeCardInfo: () => void;
-  currentMovie?: ApiCard | null;
 }
-const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
+
+const CardInfo = ({ closeCardInfo }: ICardInfo) => {
+  const context = useContext(Context);
+
   const textedGenres: string[] = [];
 
   const getTextedGenres = () => {
-    if (currentMovie) {
-      currentMovie.genre_ids?.forEach((genre) => {
+    if (context.data.currentMovie) {
+      context.data.currentMovie.genre_ids?.forEach((genre) => {
         const match = genresList.find((o: IGenre) => o.id === genre);
         if (match) {
           textedGenres.push(match.name);
@@ -23,7 +28,7 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
 
   return (
     <div className="info" onClick={closeCardInfo}>
-      {currentMovie ? (
+      {context.data.currentMovie ? (
         <div
           className="info__main"
           data-testid="popup"
@@ -32,25 +37,29 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
           }}
         >
           <div className="info__image">
-            {currentMovie.poster_path == null ? (
+            {context.data.currentMovie.poster_path == null ? (
               <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
             ) : (
-              <img src={`https://image.tmdb.org/t/p/w200${currentMovie.poster_path}`} />
+              <img
+                src={`https://image.tmdb.org/t/p/w200${context.data.currentMovie.poster_path}`}
+              />
             )}
           </div>
           <div className="info__text">
             <div className="info__header">
-              <span onClick={closeCardInfo} data-testid="closeBtn">X</span>
-              <p className="info__title">{currentMovie.title}</p>
+              <span onClick={closeCardInfo} data-testid="closeBtn">
+                X
+              </span>
+              <p className="info__title">{context.data.currentMovie.title}</p>
               <div className="info__subtitles">
-                <p>{currentMovie.release_date}</p>
-                <p>{currentMovie.original_language}</p>
+                <p>{context.data.currentMovie.release_date}</p>
+                <p>{context.data.currentMovie.original_language}</p>
                 <p>{textedGenres.join(' | ')}</p>
               </div>
             </div>
             <div className="info__body">
-              <p className="info__description">{currentMovie.overview}</p>
-              <p className="info__rating">{currentMovie.vote_average}</p>
+              <p className="info__description">{context.data.currentMovie.overview}</p>
+              <p className="info__rating">{context.data.currentMovie.vote_average}</p>
             </div>
           </div>
         </div>

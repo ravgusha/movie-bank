@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useReducer } from 'react';
+import { ChangeEvent, createContext, FormEvent, useReducer } from 'react';
 
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
@@ -24,6 +24,7 @@ interface IState {
   totalResults: number;
   currentPage: number;
 }
+
 const reducer = (state: IState, action: ActionType) => {
   switch (action.type) {
     case 'searchRequest':
@@ -52,13 +53,18 @@ const reducer = (state: IState, action: ActionType) => {
         ...state,
         currentPage: action.data,
       };
-      case 'totalResults':
+    case 'totalResults':
       return {
         ...state,
         totalResults: action.data,
       };
   }
 };
+interface IContext {
+  data: IState;
+}
+
+export const Context = createContext<IContext>();
 
 const HomePage = () => {
   const [data, dispatch] = useReducer(reducer, {
@@ -81,7 +87,7 @@ const HomePage = () => {
         .then((data) => data.json())
         .then((data) => {
           dispatch({ type: 'searchSuccess', data: [...data.results] });
-          dispatch({ type: 'totalResults', data: data.total_results});
+          dispatch({ type: 'totalResults', data: data.total_results });
         })
         .catch((error) => {
           console.log(error);
@@ -97,7 +103,9 @@ const HomePage = () => {
 
   const changePage = (pageNumber: number) => {
     dispatch({ type: 'searchRequest' });
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&page=${pageNumber}`)
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&page=${pageNumber}`
+    )
       .then((data) => data.json())
       .then((data) => {
         dispatch({ type: 'searchSuccess', data: [...data.results] });
@@ -122,22 +130,24 @@ const HomePage = () => {
     dispatch({ type: 'currentMovie', data: null });
   };
 
-  const numberOfPages = Math.floor(data.totalResults / 20)
+  const numberOfPages = Math.ceil(data.totalResults / 20);
 
   return (
-    <div>
+    <Context.Provider value={{ data: data }}>
       {data.currentMovie ? (
-        <CardInfo closeCardInfo={closeCardInfo} currentMovie={data.currentMovie} />
+        <CardInfo closeCardInfo={closeCardInfo} />
       ) : null}
       <MainText />
-      <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
+      <SearchForm handleSubmit={handleSubmit} handleChange={handleChange} />
       {data.fetchInProgress ? (
         <Spinner />
       ) : (
-        <CardList movies={data.movies} viewCardInfo={viewCardInfo} />
+        <CardList viewCardInfo={viewCardInfo} />
       )}
-      {data.totalResults > 20 ? <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage}/> : null}
-    </div>
+      {data.totalResults > 20 ? (
+        <Pagination pages={numberOfPages} changePage={changePage} />
+      ) : null}
+    </Context.Provider>
   );
 };
 

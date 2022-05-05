@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import './CardList.scss';
 import CardItem from '../CardItem/CardItem';
+import { Context } from '../../pages/HomePage';
 export interface ApiCard {
   adult: boolean;
   backdrop_path?: string;
@@ -17,14 +19,15 @@ export interface ApiCard {
   vote_count?: number;
 }
 interface ICardList {
-  movies: ApiCard[];
   viewCardInfo: (id: number) => void;
 }
 
-const CardList = ({movies, viewCardInfo}: ICardList) => {
+const CardList = ({viewCardInfo}: ICardList) => {
+  const context = useContext(Context);
+
     return (
       <ul data-testid="cards" className="cards">
-        {movies.map((movie, i) => {
+        {context.data.movies.map((movie, i) => {
           return (
             <CardItem
               key={i}
