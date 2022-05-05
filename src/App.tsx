@@ -2,18 +2,26 @@ import { Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header/Header';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { HomePage } from './pages/HomePage';
+import { HomePage, movies } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
 import apiKey from './constants';
 
 import './App.scss';
+import { createContext } from 'react';
+import { ApiCard } from './components/CardList/CardList';
 
 export let genresList: Array<IGenre>;
 export interface IGenre {
   id: number;
   name: string;
 }
+
+interface IGlobalContext {
+  movies: Array<ApiCard>;
+}
+
+export const GlobalContext = createContext<IGlobalContext>();
 
 const App = () => {
   const getGenresList = () => {
@@ -26,6 +34,7 @@ const App = () => {
 
   getGenresList();
     return (
+      <GlobalContext.Provider value={{ movies: movies }}>
       <div className="container">
         <Header />
         <Routes>
@@ -35,6 +44,7 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
+      </GlobalContext.Provider>
     );
 }
 

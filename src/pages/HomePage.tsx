@@ -1,4 +1,4 @@
-import { ChangeEvent, createContext, FormEvent, useReducer } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useReducer } from 'react';
 
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
@@ -7,6 +7,9 @@ import CardInfo from '../components/CardInfo/CardInfo';
 import Spinner from '../components/Spinner/Spinner';
 import Pagination from '../components/Pagination/Pagination';
 import apiKey from '../constants';
+import { GlobalContext } from '../App';
+
+export const movies = [];
 
 type ActionType =
   | { type: 'searchRequest' }
@@ -60,13 +63,10 @@ const reducer = (state: IState, action: ActionType) => {
       };
   }
 };
-interface IContext {
-  data: IState;
-}
-
-export const Context = createContext<IContext>();
 
 const HomePage = () => {
+  const context = useContext(GlobalContext);
+
   const [data, dispatch] = useReducer(reducer, {
     movies: [],
     searchTerm: '',
@@ -75,6 +75,11 @@ const HomePage = () => {
     totalResults: 0,
     currentPage: 1,
   });
+
+
+  useEffect(() => {
+    dispatch({ type: 'searchSuccess', data: [...context.movies] });
+  }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,6 +91,7 @@ const HomePage = () => {
       fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}`)
         .then((data) => data.json())
         .then((data) => {
+          movies.push(...data.results);
           dispatch({ type: 'searchSuccess', data: [...data.results] });
           dispatch({ type: 'totalResults', data: data.total_results });
         })
@@ -133,21 +139,19 @@ const HomePage = () => {
   const numberOfPages = Math.ceil(data.totalResults / 20);
 
   return (
-    <Context.Provider value={{ data: data }}>
-      {data.currentMovie ? (
-        <CardInfo closeCardInfo={closeCardInfo} />
-      ) : null}
-      <MainText />
-      <SearchForm handleSubmit={handleSubmit} handleChange={handleChange} />
-      {data.fetchInProgress ? (
-        <Spinner />
-      ) : (
-        <CardList viewCardInfo={viewCardInfo} />
-      )}
-      {data.totalResults > 20 ? (
-        <Pagination pages={numberOfPages} changePage={changePage} />
-      ) : null}
-    </Context.Provider>
+    <div>
+    {data.currentMovie ? (
+      <CardInfo closeCardInfo={closeCardInfo} currentMovie={data.currentMovie} />
+    ) : null}
+    <MainText />
+    <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
+    {data.fetchInProgress ? (
+      <Spinner />
+    ) : (
+      <CardList movies={data.movies} viewCardInfo={viewCardInfo} />
+    )}
+    {data.totalResults > 20 ? <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage}/> : null}
+  </div>
   );
 };
 

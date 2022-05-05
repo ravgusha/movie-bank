@@ -1,19 +1,17 @@
-import { useContext } from 'react';
-import { Context } from '../../pages/HomePage';
 import './Pagination.scss';
 
 interface IPagination {
   changePage: (i: number) => void;
   pages: number;
+  currentPage: number;
 }
 
-const Pagination = ({ pages, changePage}: IPagination) => {
-  const context = useContext(Context);
+const Pagination = ({ pages, changePage, currentPage }: IPagination) => {
   
   const pageLinks = [];
 
   for (let i = 1; i < pages + 1; i++) {
-    const active = context.data.currentPage == i ? 'active' : '';
+    const active = currentPage == i ? 'active' : '';
     pageLinks.push(
       <li className={`${active}`} key={i} onClick={() => changePage(i)}>
         <a href="#!">{i}</a>
