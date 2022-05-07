@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router';
+import { generatePath } from 'react-router-dom';
 import './CardItem.scss';
 
 export type ICardItem = {
@@ -8,6 +10,7 @@ export type ICardItem = {
 };
 
 const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
+  let history = useNavigate();
   return (
     <li className="card" data-testid={movieId}>
       {image ? (
@@ -25,6 +28,9 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
             src={`https://image.tmdb.org/t/p/w200${image}`}
             onClick={() => {
               if (viewCardInfo) viewCardInfo(movieId);
+              history(generatePath("movie/:id", {
+                id: movieId.toString()
+              }));
             }}
           />
         )
@@ -42,3 +48,7 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
 };
 
 export default CardItem;
+function useHistory() {
+  throw new Error('Function not implemented.');
+}
+
