@@ -1,36 +1,34 @@
-import { useNavigate } from 'react-router';
-import { generatePath } from 'react-router-dom';
+import { useContext } from 'react';
+import { generatePath, useNavigate } from 'react-router-dom';
+import { GlobalContext } from '../../App';
+import { ApiCard } from '../CardList/CardList';
 import './CardItem.scss';
 
 export type ICardItem = {
-  image: string;
   key: number;
-  movieId: number;
-  viewCardInfo?: (id: number) => void;
+  movie: ApiCard;
 };
 
-const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
-  let history = useNavigate();
+const CardItem = ({movie }: ICardItem) => {
+  const context = useContext(GlobalContext);
+
+  const navigate = useNavigate();
   return (
-    <li className="card" data-testid={movieId}>
-      {image ? (
-        image.includes('blob') ? (
-          <img
-            data-testid="card"
-            src={`${image}`}
-            onClick={() => {
-              if (viewCardInfo) viewCardInfo(movieId);
-            }}
-          />
+    <li className="card" data-testid={movie.id}>
+      {movie.poster_path ? (
+        movie.poster_path .includes('blob') ? (
+          <img data-testid="card" src={`${movie.poster_path }`} />
         ) : (
           <img
             data-testid="card"
-            src={`https://image.tmdb.org/t/p/w200${image}`}
+            src={`https://image.tmdb.org/t/p/w200${movie.poster_path }`}
             onClick={() => {
-              if (viewCardInfo) viewCardInfo(movieId);
-              history(generatePath("movie/:id", {
-                id: movieId.toString()
-              }));
+              context.setCurrentMovie(movie);
+              navigate(
+                generatePath('movie/:id', {
+                  id: movie.id.toString(),
+                })
+              );
             }}
           />
         )
@@ -39,7 +37,12 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
           data-testid="card"
           src={`${process.env.PUBLIC_URL}/noImage.jpg`}
           onClick={() => {
-            if (viewCardInfo) viewCardInfo(movieId);
+            context.setCurrentMovie(movie);
+            navigate(
+              generatePath('movie/:id', {
+                id: movie.id.toString(),
+              })
+            );
           }}
         />
       )}
@@ -48,7 +51,3 @@ const CardItem = ({ viewCardInfo, movieId, image }: ICardItem) => {
 };
 
 export default CardItem;
-function useHistory() {
-  throw new Error('Function not implemented.');
-}
-

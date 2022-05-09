@@ -9,8 +9,9 @@ import { createdCards } from './components/CardAddForm/CardAddForm';
 import apiKey from './constants';
 
 import './App.scss';
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 import { ApiCard } from './components/CardList/CardList';
+import CardInfo from './components/CardInfo/CardInfo';
 
 export let genresList: Array<IGenre>;
 export interface IGenre {
@@ -21,13 +22,24 @@ export interface IGenre {
 interface IGlobalContext {
   movies?: Array<ApiCard>;
   createdCards?: Array<ApiCard>;
+  currentMovie: ApiCard | null;
+  setCurrentMovie: (movie: ApiCard | null) => void;
 }
 
-export const GlobalContext = createContext<IGlobalContext>();
+const contextDefaultValue = {
+  movies: movies,
+  createdCards: createdCards,
+  currentMovie: null,
+  setCurrentMovie: () => {},
+};
+
+export const GlobalContext = createContext<IGlobalContext>(contextDefaultValue);
 
 const App = () => {
   const getGenresList = () => {
-    fetch(`https://thingproxy.freeboard.io/fetch/https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`)
+    fetch(
+      `https://thingproxy.freeboard.io/fetch/https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`
+    )
       .then((data) => data.json())
       .then((data) => {
         genresList = data.genres;
@@ -35,8 +47,20 @@ const App = () => {
   };
 
   getGenresList();
-    return (
-      <GlobalContext.Provider value={{ movies: movies, createdCards: createdCards }}>
+
+  type options = ApiCard | null;
+  
+  const [currentMovie, setCurrentMovie] = useState<options>();
+
+  return (
+    <GlobalContext.Provider
+      value={{
+        movies,
+        createdCards,
+        currentMovie: null,
+        setCurrentMovie,
+      }}
+    >
       <div className="container">
         <Header />
         <Routes>
@@ -44,10 +68,11 @@ const App = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/add" element={<CardAddPage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="movie/:currentMovie" element={<CardInfo currentMovie={currentMovie} />} />
         </Routes>
       </div>
-      </GlobalContext.Provider>
-    );
-}
+    </GlobalContext.Provider>
+  );
+};
 
 export default App;

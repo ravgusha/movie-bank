@@ -20,19 +20,17 @@ export interface ApiCard {
 
 interface ICardList {
   movies: ApiCard[];
-  viewCardInfo: (id: number) => void;
 }
 
-const CardList = ({movies, viewCardInfo}: ICardList) => {
+const CardList = ({movies}: ICardList) => {
     return (
       <ul data-testid="cards" className="cards">
         {movies.map((movie, i) => {
           return (
             <CardItem
               key={i}
-              viewCardInfo={viewCardInfo}
-              movieId={movie.id}
-              image={movie.poster_path}
+
+              movie={movie}
             />
           );
         })}

@@ -1,13 +1,16 @@
-import { genresList, IGenre } from '../../App';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { genresList, GlobalContext, IGenre } from '../../App';
 import { ApiCard } from '../CardList/CardList';
 
 import './CardInfo.scss';
 interface ICardInfo {
-  closeCardInfo: () => void;
   currentMovie?: ApiCard | null;
 }
 
-const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
+const CardInfo = ({ currentMovie }: ICardInfo) => {
+  const context = useContext(GlobalContext);
+  const navigate = useNavigate();
 
   const textedGenres: string[] = [];
 
@@ -25,7 +28,13 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
   getTextedGenres();
 
   return (
-    <div className="info" onClick={closeCardInfo}>
+    <div
+      className="info"
+      onClick={() => {
+        context.setCurrentMovie(null);
+        navigate('/');
+      }}
+    >
       {currentMovie ? (
         <div
           className="info__main"
@@ -38,15 +47,19 @@ const CardInfo = ({ currentMovie, closeCardInfo }: ICardInfo) => {
             {currentMovie.poster_path == null ? (
               <img src={`${process.env.PUBLIC_URL}/noImage.jpg`} />
             ) : (
-              <img
-                src={`https://image.tmdb.org/t/p/w200${currentMovie.poster_path}`}
-              />
+              <img src={`https://image.tmdb.org/t/p/w200${currentMovie.poster_path}`} />
             )}
           </div>
           <div className="info__text">
             <div className="info__header">
-              <span onClick={closeCardInfo} data-testid="closeBtn">
-                X
+              <span
+                onClick={() => {
+                  context.setCurrentMovie(null);
+                  navigate('/');
+                }}
+                data-testid="closeBtn"
+              >
+                ←  
               </span>
               <p className="info__title">{currentMovie.title}</p>
               <div className="info__subtitles">

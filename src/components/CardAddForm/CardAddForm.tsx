@@ -145,7 +145,7 @@ const CardAddForm = () => {
       <div className="cards">
         {cards
           ? cards.map((card) => {
-              return <CardItem movieId={card.id} key={card.id} image={card.poster_path} />;
+              return <CardItem movie={card} key={card.id} />;
             })
           : null}
       </div>
