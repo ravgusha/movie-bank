@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner/Spinner';
 import Pagination from '../components/Pagination/Pagination';
 import apiKey from '../constants';
 import { GlobalContext } from '../App';
+import Filters from '../components/Filters/Filters';
 
 export const movies: ApiCard[] = [];
 
@@ -15,7 +16,10 @@ type ActionType =
   | { type: 'searchSuccess'; data: ApiCard[] }
   | { type: 'searchTerm'; data: string }
   | { type: 'currentPage'; data: number }
-  | { type: 'totalResults'; data: number };
+  | { type: 'totalResults'; data: number }
+  | { type: 'adult'; data: boolean }
+  | { type: 'searchTerm'; data: string }
+  | { type: 'language'; data: string };
 
 interface IState {
   movies: ApiCard[];
@@ -23,6 +27,8 @@ interface IState {
   fetchInProgress: boolean;
   totalResults: number;
   currentPage: number;
+  adult: boolean;
+  language: string;
 }
 
 const reducer = (state: IState, action: ActionType) => {
@@ -53,6 +59,16 @@ const reducer = (state: IState, action: ActionType) => {
         ...state,
         totalResults: action.data,
       };
+    case 'adult':
+      return {
+        ...state,
+        adult: action.data,
+      };
+    case 'language':
+      return {
+        ...state,
+        language: action.data,
+      };
   }
 };
 
@@ -65,6 +81,8 @@ const HomePage = () => {
     fetchInProgress: false,
     totalResults: 0,
     currentPage: 1,
+    adult: false,
+    language: ''
   });
 
   useEffect(() => {
@@ -80,7 +98,9 @@ const HomePage = () => {
       return;
     } else {
       dispatch({ type: 'searchRequest' });
-      fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}`)
+      fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&include_adult=${data.adult}&language=${data.language}`
+      )
         .then((data) => data.json())
         .then((data) => {
           movies.push(...data.results);
@@ -99,10 +119,25 @@ const HomePage = () => {
     localStorage.setItem('inputValue', e.target.value);
   };
 
+  const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.name) {
+      case 'adult':
+        e.target.checked
+          ? dispatch({ type: 'adult', data: true })
+          : dispatch({ type: 'adult', data: false });
+        break;
+      case 'language':
+        e.target.checked
+          ? dispatch({ type: 'language', data: e.target.value })
+          : dispatch({ type: 'language', data: '' });
+        break;
+    }
+  };
+
   const changePage = (pageNumber: number) => {
     dispatch({ type: 'searchRequest' });
     fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&page=${pageNumber}`
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&page=${pageNumber}&include_adult=${data.adult}&language=${data.language}`
     )
       .then((data) => data.json())
       .then((data) => {
@@ -120,6 +155,7 @@ const HomePage = () => {
     <div>
       <MainText />
       <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
+      <Filters handleChange={handleFilterChange} />
       {data.fetchInProgress ? <Spinner /> : <CardList movies={data.movies} />}
       {data.totalResults > 20 ? (
         <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage} />
