@@ -17,6 +17,15 @@ const Filters = ({ handleChange }: IFilters) => {
         <input name="language" type="radio" value="en" onChange={handleChange} />
         <label>English</label>
       </div>
+      <div>
+        <span>Movies per page:</span>
+        <input name="moviesPerPage" type="radio" value="10" onChange={handleChange} />
+        <label>10</label>
+        <input name="moviesPerPage" type="radio" value="15" onChange={handleChange} />
+        <label>15</label>
+        <input name="moviesPerPage" type="radio" value="20" onChange={handleChange} />
+        <label>20</label>
+      </div>
     </>
   );
 };

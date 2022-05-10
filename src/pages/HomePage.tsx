@@ -19,7 +19,8 @@ type ActionType =
   | { type: 'totalResults'; data: number }
   | { type: 'adult'; data: boolean }
   | { type: 'searchTerm'; data: string }
-  | { type: 'language'; data: string };
+  | { type: 'language'; data: string }
+  | { type: 'moviesPerPage'; data: string };
 
 interface IState {
   movies: ApiCard[];
@@ -29,6 +30,7 @@ interface IState {
   currentPage: number;
   adult: boolean;
   language: string;
+  moviesPerPage: string;
 }
 
 const reducer = (state: IState, action: ActionType) => {
@@ -69,6 +71,11 @@ const reducer = (state: IState, action: ActionType) => {
         ...state,
         language: action.data,
       };
+    case 'moviesPerPage':
+      return {
+        ...state,
+        moviesPerPage: action.data,
+      };
   }
 };
 
@@ -82,7 +89,8 @@ const HomePage = () => {
     totalResults: 0,
     currentPage: 1,
     adult: false,
-    language: ''
+    language: '',
+    moviesPerPage: '20',
   });
 
   useEffect(() => {
@@ -120,6 +128,7 @@ const HomePage = () => {
   };
 
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value)
     switch (e.target.name) {
       case 'adult':
         e.target.checked
@@ -130,6 +139,9 @@ const HomePage = () => {
         e.target.checked
           ? dispatch({ type: 'language', data: e.target.value })
           : dispatch({ type: 'language', data: '' });
+        break;
+      case 'moviesPerPage':
+        dispatch({ type: 'moviesPerPage', data: e.target.value });
         break;
     }
   };
@@ -156,7 +168,7 @@ const HomePage = () => {
       <MainText />
       <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
       <Filters handleChange={handleFilterChange} />
-      {data.fetchInProgress ? <Spinner /> : <CardList movies={data.movies} />}
+      {data.fetchInProgress ? <Spinner /> : <CardList movies={(data.movies).slice(0, +data.moviesPerPage)} />}
       {data.totalResults > 20 ? (
         <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage} />
       ) : null}
