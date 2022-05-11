@@ -1,19 +1,17 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useReducer } from 'react';
 
+import { GlobalContext } from '../App';
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
-import CardList, { ApiCard } from '../components/CardList/CardList';
+import CardList from '../components/CardList/CardList';
 import Spinner from '../components/Spinner/Spinner';
 import Pagination from '../components/Pagination/Pagination';
-import apiKey from '../constants';
-import { GlobalContext } from '../App';
 import Filters from '../components/Filters/Filters';
-
-export const movies: ApiCard[] = [];
+import apiKey from '../constants';
 
 type ActionType =
   | { type: 'searchRequest' }
-  | { type: 'searchSuccess'; data: ApiCard[] }
+  | { type: 'searchSuccess' }
   | { type: 'searchTerm'; data: string }
   | { type: 'currentPage'; data: number }
   | { type: 'totalResults'; data: number }
@@ -23,7 +21,6 @@ type ActionType =
   | { type: 'moviesPerPage'; data: string };
 
 interface IState {
-  movies: ApiCard[];
   searchTerm: string;
   fetchInProgress: boolean;
   totalResults: number;
@@ -43,7 +40,6 @@ const reducer = (state: IState, action: ActionType) => {
     case 'searchSuccess':
       return {
         ...state,
-        movies: action.data,
         fetchInProgress: false,
       };
     case 'searchTerm':
@@ -83,7 +79,6 @@ const HomePage = () => {
   const context = useContext(GlobalContext);
 
   const [data, dispatch] = useReducer(reducer, {
-    movies: [],
     searchTerm: '',
     fetchInProgress: false,
     totalResults: 0,
@@ -95,7 +90,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (context.movies) {
-      dispatch({ type: 'searchSuccess', data: [...context.movies] });
+      context.setMovies([...context.movies]);
     }
   }, []);
 
@@ -106,13 +101,15 @@ const HomePage = () => {
       return;
     } else {
       dispatch({ type: 'searchRequest' });
+      const moviesPerPage = Number(data.moviesPerPage);
       fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&include_adult=${data.adult}&language=${data.language}`
       )
         .then((data) => data.json())
         .then((data) => {
-          movies.push(...data.results);
-          dispatch({ type: 'searchSuccess', data: [...data.results] });
+          const cuttedMovies= (data.results).slice(0, moviesPerPage)
+          context.setMovies(cuttedMovies);
+          dispatch({ type: 'searchSuccess' });
           dispatch({ type: 'totalResults', data: data.total_results });
         })
         .catch((error) => {
@@ -153,7 +150,7 @@ const HomePage = () => {
     )
       .then((data) => data.json())
       .then((data) => {
-        dispatch({ type: 'searchSuccess', data: [...data.results] });
+        dispatch({ type: 'searchSuccess'});
         dispatch({ type: 'currentPage', data: data.page });
       })
       .catch((error) => {
@@ -168,7 +165,7 @@ const HomePage = () => {
       <MainText />
       <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
       <Filters handleChange={handleFilterChange} />
-      {data.fetchInProgress ? <Spinner /> : <CardList movies={(data.movies).slice(0, +data.moviesPerPage)} />}
+      {data.fetchInProgress ? <Spinner /> : <CardList movies={context.movies} />}
       {data.totalResults > 20 ? (
         <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage} />
       ) : null}

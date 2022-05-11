@@ -1,11 +1,11 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import moment from 'moment';
 
 import './CardAddForm.scss';
 import CardItem from '../CardItem/CardItem';
-import { ApiCard } from '../CardList/CardList';
 import { v4 as uuid } from 'uuid';
+import { GlobalContext } from '../../App';
 interface ICardFields {
   title: string;
   date: string;
@@ -15,10 +15,8 @@ interface ICardFields {
   poster: FileList;
 }
 
-export const createdCards: ApiCard[] = [];
-
 const CardAddForm = () => {
-  const [cards, setCards] = useState<ApiCard[]>([]);
+  const context = useContext(GlobalContext);
 
   const {
     register,
@@ -42,13 +40,12 @@ const CardAddForm = () => {
       id: small_id,
     };
 
-    setCards([...cards, newCard]);
-    createdCards.push(newCard);
+    context.setCards([...context.cards, newCard]);
     reset();
   };
 
   useEffect(() => {
-    setCards([...createdCards]);
+    context.setCards([...context.cards]);
   }, []);
 
   return (
@@ -143,8 +140,8 @@ const CardAddForm = () => {
         <input type="submit" />
       </form>
       <div className="cards">
-        {cards
-          ? cards.map((card) => {
+        {context.cards
+          ? context.cards.map((card) => {
               return <CardItem movie={card} key={card.id} />;
             })
           : null}

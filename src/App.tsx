@@ -2,10 +2,9 @@ import { Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header/Header';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { HomePage, movies } from './pages/HomePage';
+import { HomePage} from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
-import { createdCards } from './components/CardAddForm/CardAddForm';
 import apiKey from './constants';
 
 import './App.scss';
@@ -20,17 +19,21 @@ export interface IGenre {
 }
 
 interface IGlobalContext {
-  movies?: Array<ApiCard>;
-  createdCards?: Array<ApiCard>;
+  movies: Array<ApiCard> | [];
+  setMovies: (movies:Array<ApiCard>) => void;
   currentMovie: ApiCard | null;
   setCurrentMovie: (movie: ApiCard | null) => void;
+  cards: Array<ApiCard> | [];
+  setCards: (cards :Array<ApiCard>) => void;
 }
 
 const contextDefaultValue = {
-  movies: movies,
-  createdCards: createdCards,
+  movies: [],
+  setMovies: () => {},
   currentMovie: null,
   setCurrentMovie: () => {},
+  cards: [],
+  setCards: () => {},
 };
 
 export const GlobalContext = createContext<IGlobalContext>(contextDefaultValue);
@@ -48,17 +51,22 @@ const App = () => {
 
   getGenresList();
 
-  type options = ApiCard | null;
+  type movieOptions = ApiCard | null;
+  type moviesOptions = Array<ApiCard>  | [];
   
-  const [currentMovie, setCurrentMovie] = useState<options>();
+  const [currentMovie, setCurrentMovie] = useState<movieOptions>();
+  const [movies, setMovies] = useState<moviesOptions>([]);
+  const [cards, setCards] = useState<ApiCard[]>([]);
 
   return (
     <GlobalContext.Provider
       value={{
         movies,
-        createdCards,
+        setMovies,
         currentMovie: null,
         setCurrentMovie,
+        cards,
+        setCards
       }}
     >
       <div className="container">

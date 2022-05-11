@@ -19,13 +19,13 @@ export interface ApiCard {
 }
 
 interface ICardList {
-  movies: ApiCard[];
+  movies: ApiCard[] | null;
 }
 
 const CardList = ({movies}: ICardList) => {
     return (
       <ul data-testid="cards" className="cards">
-        {movies.map((movie, i) => {
+        {movies?.map((movie, i) => {
           return (
             <CardItem
               key={i}
