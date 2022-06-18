@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { GlobalContext } from '../../App';
 import { ApiCard } from '../CardList/CardList';
+
 import './CardItem.scss';
 
 export type ICardItem = {
@@ -10,9 +10,9 @@ export type ICardItem = {
 };
 
 const CardItem = ({movie }: ICardItem) => {
-  const context = useContext(GlobalContext);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   return (
     <li className="card" data-testid={movie.id}>
       {movie.poster_path ? (
@@ -23,7 +23,7 @@ const CardItem = ({movie }: ICardItem) => {
             data-testid="card"
             src={`https://image.tmdb.org/t/p/w200${movie.poster_path }`}
             onClick={() => {
-              context.setCurrentMovie(movie);
+              dispatch({ type: 'currentMovie', data: movie });
               navigate(
                 generatePath('movie/:id', {
                   id: movie.id.toString(),
@@ -37,7 +37,7 @@ const CardItem = ({movie }: ICardItem) => {
           data-testid="card"
           src={`${process.env.PUBLIC_URL}/noImage.jpg`}
           onClick={() => {
-            context.setCurrentMovie(movie);
+            dispatch({ type: 'currentMovie', data: movie });
             navigate(
               generatePath('movie/:id', {
                 id: movie.id.toString(),

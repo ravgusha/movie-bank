@@ -1,15 +1,12 @@
-import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { genresList, GlobalContext, IGenre } from '../../App';
-import { ApiCard } from '../CardList/CardList';
+import { genresList, IGenre } from '../../App';
 
 import './CardInfo.scss';
-interface ICardInfo {
-  currentMovie?: ApiCard | null;
-}
 
-const CardInfo = ({ currentMovie }: ICardInfo) => {
-  const context = useContext(GlobalContext);
+const CardInfo = () => {
+  const currentMovie = useSelector((state) => state.currentMovie);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const textedGenres: string[] = [];
@@ -31,7 +28,7 @@ const CardInfo = ({ currentMovie }: ICardInfo) => {
     <div
       className="info"
       onClick={() => {
-        context.setCurrentMovie(null);
+        dispatch({ type: 'currentMovie', data: null });
         navigate('/');
       }}
     >
@@ -54,12 +51,12 @@ const CardInfo = ({ currentMovie }: ICardInfo) => {
             <div className="info__header">
               <span
                 onClick={() => {
-                  context.setCurrentMovie(null);
+                  dispatch({ type: 'currentMovie', data: null });
                   navigate('/');
                 }}
                 data-testid="closeBtn"
               >
-                ←  
+                ←
               </span>
               <p className="info__title">{currentMovie.title}</p>
               <div className="info__subtitles">

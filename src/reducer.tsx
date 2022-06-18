@@ -1,4 +1,4 @@
-import { ApiCard } from "./components/CardList/CardList";
+import { ApiCard } from './components/CardList/CardList';
 
 export interface IState {
   searchTerm: string;
@@ -8,7 +8,7 @@ export interface IState {
   adult: boolean;
   language: string;
   moviesPerPage: string;
-  movies:  Array<ApiCard> | [];
+  movies: Array<ApiCard> | [];
 }
 
 type ActionType =
@@ -21,9 +21,8 @@ type ActionType =
   | { type: 'searchTerm'; data: string }
   | { type: 'language'; data: string }
   | { type: 'moviesPerPage'; data: string }
-  | { type: 'movies'; data: [] };
-  
-
+  | { type: 'movies'; data: [] }
+  | { type: 'currentMovie'; data: string | null};
 
 const defaultState = {
   searchTerm: '',
@@ -33,7 +32,8 @@ const defaultState = {
   adult: false,
   language: '',
   moviesPerPage: '20',
-  movies: []
+  movies: [],
+  currentMovie: null
 };
 
 const reducer = (state: IState = defaultState, action: ActionType) => {
@@ -78,11 +78,15 @@ const reducer = (state: IState = defaultState, action: ActionType) => {
         ...state,
         moviesPerPage: action.data,
       };
-
-      case 'movies':
+    case 'movies':
       return {
         ...state,
         movies: action.data,
+      };
+    case 'currentMovie':
+      return {
+        ...state,
+        currentMovie: action.data,
       };
     default:
       return state;

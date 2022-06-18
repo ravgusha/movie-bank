@@ -8,8 +8,6 @@ import { CardAddPage } from './pages/CardAddPage';
 import apiKey from './constants';
 
 import './App.scss';
-import { createContext, useState } from 'react';
-import { ApiCard } from './components/CardList/CardList';
 import CardInfo from './components/CardInfo/CardInfo';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -20,26 +18,6 @@ export interface IGenre {
   id: number;
   name: string;
 }
-
-interface IGlobalContext {
-  movies: Array<ApiCard> | [];
-  setMovies: (movies: Array<ApiCard>) => void;
-  currentMovie: ApiCard | null;
-  setCurrentMovie: (movie: ApiCard | null) => void;
-  cards: Array<ApiCard> | [];
-  setCards: (cards: Array<ApiCard>) => void;
-}
-
-const contextDefaultValue = {
-  movies: [],
-  setMovies: () => {},
-  currentMovie: null,
-  setCurrentMovie: () => {},
-  cards: [],
-  setCards: () => {},
-};
-
-export const GlobalContext = createContext<IGlobalContext>(contextDefaultValue);
 
 const App = () => {
   const store = createStore(reducer);
@@ -56,13 +34,6 @@ const App = () => {
 
   getGenresList();
 
-  type movieOptions = ApiCard | null;
-  type moviesOptions = Array<ApiCard> | [];
-
-  const [currentMovie, setCurrentMovie] = useState<movieOptions>();
-  const [movies, setMovies] = useState<moviesOptions>([]);
-  const [cards, setCards] = useState<ApiCard[]>([]);
-
   return (
     <Provider store={store}>
       <div className="container">
@@ -72,7 +43,7 @@ const App = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/add" element={<CardAddPage />} />
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="movie/:currentMovie" element={<CardInfo currentMovie={currentMovie} />} />
+          <Route path="movie/:currentMovie" element={<CardInfo />} />
         </Routes>
       </div>
     </Provider>

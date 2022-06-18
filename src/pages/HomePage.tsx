@@ -1,6 +1,5 @@
-import { ChangeEvent, FormEvent, useContext, useEffect, useReducer } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 
-import { GlobalContext } from '../App';
 import MainText from '../components/MainText/MainText';
 import SearchForm from '../components/SearchForm/SearchForm';
 import CardList from '../components/CardList/CardList';
@@ -8,24 +7,10 @@ import Spinner from '../components/Spinner/Spinner';
 import Pagination from '../components/Pagination/Pagination';
 import Filters from '../components/Filters/Filters';
 import apiKey from '../constants';
-import { createStore } from 'redux';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../reducer';
 
 const HomePage = () => {
-  // const context = useContext(GlobalContext);
-  // const store = createStore(reducer);
-
-  // const [data, dispatch] = useReducer(reducer, {
-  //   searchTerm: '',
-  //   fetchInProgress: false,
-  //   totalResults: 0,
-  //   currentPage: 1,
-  //   adult: false,
-  //   language: '',
-  //   moviesPerPage: '20',
-  // });
-
   // useEffect(() => {
   //   if (context.movies) {
   //     context.setMovies([...context.movies]);
@@ -51,7 +36,6 @@ const HomePage = () => {
         .then((data) => {
           const cuttedMovies = data.results.slice(0, endIndex);
           dispatch({ type: 'movies', data: cuttedMovies });
-          // context.setMovies(cuttedMovies);
           dispatch({ type: 'searchSuccess' });
           dispatch({ type: 'totalResults', data: data.total_results });
         })
