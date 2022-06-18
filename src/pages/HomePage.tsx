@@ -8,107 +8,50 @@ import Spinner from '../components/Spinner/Spinner';
 import Pagination from '../components/Pagination/Pagination';
 import Filters from '../components/Filters/Filters';
 import apiKey from '../constants';
-
-type ActionType =
-  | { type: 'searchRequest' }
-  | { type: 'searchSuccess' }
-  | { type: 'searchTerm'; data: string }
-  | { type: 'currentPage'; data: number }
-  | { type: 'totalResults'; data: number }
-  | { type: 'adult'; data: boolean }
-  | { type: 'searchTerm'; data: string }
-  | { type: 'language'; data: string }
-  | { type: 'moviesPerPage'; data: string };
-
-interface IState {
-  searchTerm: string;
-  fetchInProgress: boolean;
-  totalResults: number;
-  currentPage: number;
-  adult: boolean;
-  language: string;
-  moviesPerPage: string;
-}
-
-const reducer = (state: IState, action: ActionType) => {
-  switch (action.type) {
-    case 'searchRequest':
-      return {
-        ...state,
-        fetchInProgress: true,
-      };
-    case 'searchSuccess':
-      return {
-        ...state,
-        fetchInProgress: false,
-      };
-    case 'searchTerm':
-      return {
-        ...state,
-        searchTerm: action.data,
-      };
-    case 'currentPage':
-      return {
-        ...state,
-        currentPage: action.data,
-      };
-    case 'totalResults':
-      return {
-        ...state,
-        totalResults: action.data,
-      };
-    case 'adult':
-      return {
-        ...state,
-        adult: action.data,
-      };
-    case 'language':
-      return {
-        ...state,
-        language: action.data,
-      };
-    case 'moviesPerPage':
-      return {
-        ...state,
-        moviesPerPage: action.data,
-      };
-  }
-};
+import { createStore } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { IState } from '../reducer';
 
 const HomePage = () => {
-  const context = useContext(GlobalContext);
+  // const context = useContext(GlobalContext);
+  // const store = createStore(reducer);
 
-  const [data, dispatch] = useReducer(reducer, {
-    searchTerm: '',
-    fetchInProgress: false,
-    totalResults: 0,
-    currentPage: 1,
-    adult: false,
-    language: '',
-    moviesPerPage: '20',
-  });
+  // const [data, dispatch] = useReducer(reducer, {
+  //   searchTerm: '',
+  //   fetchInProgress: false,
+  //   totalResults: 0,
+  //   currentPage: 1,
+  //   adult: false,
+  //   language: '',
+  //   moviesPerPage: '20',
+  // });
 
-  useEffect(() => {
-    if (context.movies) {
-      context.setMovies([...context.movies]);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (context.movies) {
+  //     context.setMovies([...context.movies]);
+  //   }
+  // }, []);
+
+  const dispatch = useDispatch();
+  const { searchTerm, moviesPerPage, totalResults, fetchInProgress, currentPage, adult, language, movies } =
+    useSelector((state: IState) => state);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!data.searchTerm) {
+    if (!searchTerm) {
       return;
     } else {
       dispatch({ type: 'searchRequest' });
-      const moviesPerPage = Number(data.moviesPerPage);
+      const endIndex = Number(moviesPerPage);
       fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&include_adult=${data.adult}&language=${data.language}`
+        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&include_adult=${adult}&language=${language}`
       )
         .then((data) => data.json())
         .then((data) => {
-          const cuttedMovies= (data.results).slice(0, moviesPerPage)
-          context.setMovies(cuttedMovies);
+          const cuttedMovies = data.results.slice(0, endIndex);
+          dispatch({ type: 'movies', data: cuttedMovies });
+          // context.setMovies(cuttedMovies);
           dispatch({ type: 'searchSuccess' });
           dispatch({ type: 'totalResults', data: data.total_results });
         })
@@ -125,7 +68,7 @@ const HomePage = () => {
   };
 
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     switch (e.target.name) {
       case 'adult':
         e.target.checked
@@ -146,11 +89,11 @@ const HomePage = () => {
   const changePage = (pageNumber: number) => {
     dispatch({ type: 'searchRequest' });
     fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${data.searchTerm}&page=${pageNumber}&include_adult=${data.adult}&language=${data.language}`
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&page=${pageNumber}&include_adult=${adult}&language=${language}`
     )
       .then((data) => data.json())
       .then((data) => {
-        dispatch({ type: 'searchSuccess'});
+        dispatch({ type: 'searchSuccess' });
         dispatch({ type: 'currentPage', data: data.page });
       })
       .catch((error) => {
@@ -158,16 +101,16 @@ const HomePage = () => {
       });
   };
 
-  const numberOfPages = Math.ceil(data.totalResults / 20);
+  const numberOfPages = Math.ceil(totalResults / 20);
 
   return (
     <div>
       <MainText />
-      <SearchForm value={data.searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
+      <SearchForm value={searchTerm} handleSubmit={handleSubmit} handleChange={handleChange} />
       <Filters handleChange={handleFilterChange} />
-      {data.fetchInProgress ? <Spinner /> : <CardList movies={context.movies} />}
-      {data.totalResults > 20 ? (
-        <Pagination pages={numberOfPages} changePage={changePage} currentPage={data.currentPage} />
+      {fetchInProgress ? <Spinner /> : <CardList movies={movies} />}
+      {totalResults > 20 ? (
+        <Pagination pages={numberOfPages} changePage={changePage} currentPage={currentPage} />
       ) : null}
     </div>
   );
