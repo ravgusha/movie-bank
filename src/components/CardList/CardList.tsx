@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+import { IState } from '../../reducer';
 import CardItem from '../CardItem/CardItem';
 
 import './CardList.scss';
@@ -18,24 +20,15 @@ export interface ApiCard {
   vote_count?: number;
 }
 
-interface ICardList {
-  movies: ApiCard[] | null;
-}
-
-const CardList = ({movies}: ICardList) => {
-    return (
-      <ul data-testid="cards" className="cards">
-        {movies?.map((movie, i) => {
-          return (
-            <CardItem
-              key={i}
-
-              movie={movie}
-            />
-          );
-        })}
-      </ul>
-    );
-}
+const CardList = () => {
+  const movies = useSelector((state: IState) => state.movies);
+  return (
+    <ul data-testid="cards" className="cards">
+      {movies?.map((movie, i) => {
+        return <CardItem key={i} movie={movie} />;
+      })}
+    </ul>
+  );
+};
 
 export default CardList;

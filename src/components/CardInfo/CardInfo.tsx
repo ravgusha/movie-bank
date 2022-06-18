@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { genresList, IGenre } from '../../App';
+import { IState } from '../../reducer';
 
 import './CardInfo.scss';
 
 const CardInfo = () => {
-  const currentMovie = useSelector((state) => state.currentMovie);
+  const currentMovie = useSelector((state: IState) => state.currentMovie);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -13,7 +14,7 @@ const CardInfo = () => {
 
   const getTextedGenres = () => {
     if (currentMovie) {
-      currentMovie.genre_ids?.forEach((genre) => {
+      currentMovie.genre_ids?.forEach((genre: number) => {
         const match = genresList.find((o: IGenre) => o.id === genre);
         if (match) {
           textedGenres.push(match.name);

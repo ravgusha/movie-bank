@@ -9,6 +9,7 @@ export interface IState {
   language: string;
   moviesPerPage: string;
   movies: Array<ApiCard> | [];
+  currentMovie: ApiCard | null;
 }
 
 type ActionType =
@@ -22,7 +23,7 @@ type ActionType =
   | { type: 'language'; data: string }
   | { type: 'moviesPerPage'; data: string }
   | { type: 'movies'; data: [] }
-  | { type: 'currentMovie'; data: string | null};
+  | { type: 'currentMovie'; data: ApiCard | null };
 
 const defaultState = {
   searchTerm: '',
@@ -33,7 +34,7 @@ const defaultState = {
   language: '',
   moviesPerPage: '20',
   movies: [],
-  currentMovie: null
+  currentMovie: null,
 };
 
 const reducer = (state: IState = defaultState, action: ActionType) => {
