@@ -1,14 +1,14 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import apiKey from '../../constants';
-import { IState } from '../../reducer';
+import { IState } from '../../store/store';
 
 import './SearchForm.scss';
 
 const SearchForm= () => {
   const dispatch = useDispatch();
   const { searchTerm, moviesPerPage, adult, language } =
-    useSelector((state: IState) => state);
+    useSelector((state: IState) => state.movieReducer);
     
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

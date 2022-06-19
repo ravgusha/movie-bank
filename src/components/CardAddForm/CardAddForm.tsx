@@ -1,11 +1,13 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import { v4 as uuid } from 'uuid';
+
+import CardItem from '../CardItem/CardItem';
 
 import './CardAddForm.scss';
-import CardItem from '../CardItem/CardItem';
-import { v4 as uuid } from 'uuid';
-import { GlobalContext } from '../../App';
+import { IState } from '../../store/store';
+
 interface ICardFields {
   title: string;
   date: string;
@@ -16,8 +18,9 @@ interface ICardFields {
 }
 
 const CardAddForm = () => {
-  const context = useContext(GlobalContext);
-
+  const dispatch = useDispatch();
+  const cards = useSelector((state: IState) => state.cardReducer.cards);
+  
   const {
     register,
     handleSubmit,
@@ -39,14 +42,9 @@ const CardAddForm = () => {
       poster_path: posterUrl,
       id: small_id,
     };
-
-    context.setCards([...context.cards, newCard]);
+    dispatch({ type: 'cards', data: newCard });
     reset();
   };
-
-  useEffect(() => {
-    context.setCards([...context.cards]);
-  }, []);
 
   return (
     <>
@@ -140,8 +138,8 @@ const CardAddForm = () => {
         <input type="submit" />
       </form>
       <div className="cards">
-        {context.cards
-          ? context.cards.map((card) => {
+        {cards
+          ? cards.map((card) => {
               return <CardItem movie={card} key={card.id} />;
             })
           : null}

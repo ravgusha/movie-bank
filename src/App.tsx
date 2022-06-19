@@ -1,18 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import Header from './components/Header/Header';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
+import CardInfo from './components/CardInfo/CardInfo';
 import apiKey from './constants';
 
 import './App.scss';
-import CardInfo from './components/CardInfo/CardInfo';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import reducer from './reducer';
-
+import store from './store/store';
 export let genresList: Array<IGenre>;
 export interface IGenre {
   id: number;
@@ -20,7 +18,6 @@ export interface IGenre {
 }
 
 const App = () => {
-  const store = createStore(reducer);
 
   const getGenresList = () => {
     fetch(

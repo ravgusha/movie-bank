@@ -1,6 +1,6 @@
-import { ApiCard } from './components/CardList/CardList';
+import { ApiCard } from '../components/CardList/CardList';
 
-export interface IState {
+export interface IMovieState {
   searchTerm: string;
   fetchInProgress: boolean;
   totalResults: number;
@@ -37,7 +37,7 @@ const defaultState = {
   currentMovie: null,
 };
 
-const reducer = (state: IState = defaultState, action: ActionType) => {
+const movieReducer = (state: IMovieState = defaultState, action: ActionType) => {
   switch (action.type) {
     case 'searchRequest':
       return {
@@ -94,4 +94,4 @@ const reducer = (state: IState = defaultState, action: ActionType) => {
   }
 };
 
-export default reducer;
+export default movieReducer;

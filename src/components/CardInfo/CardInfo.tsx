@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { genresList, IGenre } from '../../App';
-import { IState } from '../../reducer';
+import { IState } from '../../store/store';
 
 import './CardInfo.scss';
 
 const CardInfo = () => {
-  const currentMovie = useSelector((state: IState) => state.currentMovie);
+  const currentMovie = useSelector((state: IState) => state.movieReducer.currentMovie);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

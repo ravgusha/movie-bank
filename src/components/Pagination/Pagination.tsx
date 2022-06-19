@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { IState } from '../../reducer';
+import { IState } from '../../store/store';
 import apiKey from '../../constants';
 
 import './Pagination.scss';
@@ -9,7 +9,7 @@ const Pagination = () => {
 
 
   const { searchTerm, moviesPerPage, currentPage, adult, language, totalResults } = useSelector(
-    (state: IState) => state
+    (state: IState) => state.movieReducer
   );
 
   const pageLinks = [];

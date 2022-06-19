@@ -23,7 +23,7 @@ describe('Search form', () => {
   afterEach(cleanup);
 
   test('renders SearchFrom', () => {
-    render(<SearchForm handleSubmit={handleSubmit} handleChange={handleChange} />);
+    render(<SearchForm />);
     const inputEl = screen.getByTestId('input');
     expect(inputEl).toBeInTheDocument();
     expect(inputEl).toHaveAttribute('type', 'text');

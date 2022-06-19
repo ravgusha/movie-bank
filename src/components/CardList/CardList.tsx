@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { IState } from '../../reducer';
+import { IState } from '../../store/store';
 import CardItem from '../CardItem/CardItem';
 
 import './CardList.scss';
@@ -21,7 +21,7 @@ export interface ApiCard {
 }
 
 const CardList = () => {
-  const movies = useSelector((state: IState) => state.movies);
+  const movies = useSelector((state: IState) => state.movieReducer.movies);
   return (
     <ul data-testid="cards" className="cards">
       {movies?.map((movie, i) => {

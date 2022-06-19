@@ -5,10 +5,10 @@ import Spinner from '../components/Spinner/Spinner';
 import Pagination from '../components/Pagination/Pagination';
 import Filters from '../components/Filters/Filters';
 import { useSelector } from 'react-redux';
-import { IState } from '../reducer';
+import { IState } from '../store/store';
 
 const HomePage = () => {
-  const { totalResults, fetchInProgress } = useSelector((state: IState) => state);
+  const { totalResults, fetchInProgress } = useSelector((state: IState) => state.movieReducer);
 
   return (
     <div>
