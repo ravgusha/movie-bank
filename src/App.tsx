@@ -8,10 +8,12 @@ import { AboutPage } from './pages/AboutPage';
 import { CardAddPage } from './pages/CardAddPage';
 import CardInfo from './components/CardInfo/CardInfo';
 import apiKey from './constants';
+import store from './store';
 
 import './App.scss';
-import store from './store/store';
+
 export let genresList: Array<IGenre>;
+
 export interface IGenre {
   id: number;
   name: string;

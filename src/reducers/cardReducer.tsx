@@ -4,7 +4,7 @@ export interface ICardState {
   cards: Array<ApiCard> | [];
 }
 
-type ActionType = { type: 'cards'; data: [] };
+type ActionType = { type: 'ADD_CARD'; payload: [] };
 
 const defaultState = {
   cards: [],
@@ -12,10 +12,10 @@ const defaultState = {
 
 const cardReducer = (state: ICardState = defaultState, action: ActionType) => {
   switch (action.type) {
-    case 'cards':
+    case 'ADD_CARD':
       return {
         ...state,
-        cards: [...state.cards, action.data]
+        cards: [...state.cards, action.payload]
       };
     default:
       return state;

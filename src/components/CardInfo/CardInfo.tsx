@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { genresList, IGenre } from '../../App';
-import { IState } from '../../store/store';
+import { IState } from '../../store';
 
 import './CardInfo.scss';
 
@@ -29,7 +29,7 @@ const CardInfo = () => {
     <div
       className="info"
       onClick={() => {
-        dispatch({ type: 'currentMovie', data: null });
+        dispatch({ type: 'SET_CURRENT_MOVIE', payload: null });
         navigate('/');
       }}
     >
@@ -52,7 +52,7 @@ const CardInfo = () => {
             <div className="info__header">
               <span
                 onClick={() => {
-                  dispatch({ type: 'currentMovie', data: null });
+                  dispatch({ type: 'SET_CURRENT_MOVIE', payload: null });
                   navigate('/');
                 }}
                 data-testid="closeBtn"

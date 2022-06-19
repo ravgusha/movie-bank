@@ -13,17 +13,16 @@ export interface IMovieState {
 }
 
 type ActionType =
-  | { type: 'searchRequest' }
-  | { type: 'searchSuccess' }
-  | { type: 'searchTerm'; data: string }
-  | { type: 'currentPage'; data: number }
-  | { type: 'totalResults'; data: number }
-  | { type: 'adult'; data: boolean }
-  | { type: 'searchTerm'; data: string }
-  | { type: 'language'; data: string }
-  | { type: 'moviesPerPage'; data: string }
-  | { type: 'movies'; data: [] }
-  | { type: 'currentMovie'; data: ApiCard | null };
+  | { type: 'FETCH_MOVIES' }
+  | { type: 'CANCEL_FETCH_MOVIES' }
+  | { type: 'ADD_SEARCH_TERM'; payload: string }
+  | { type: 'SET_CURRENT_PAGE'; payload: number }
+  | { type: 'SET_TOTAL_RESULTS'; payload: number }
+  | { type: 'SET_AGE_LIMIT'; payload: boolean }
+  | { type: 'SET_LANGUAGE'; payload: string }
+  | { type: 'SET_MOVIES_PER_PAGE'; payload: string }
+  | { type: 'ADD_MOVIES'; payload: [] }
+  | { type: 'SET_CURRENT_MOVIE'; payload: ApiCard | null };
 
 const defaultState = {
   searchTerm: '',
@@ -39,55 +38,55 @@ const defaultState = {
 
 const movieReducer = (state: IMovieState = defaultState, action: ActionType) => {
   switch (action.type) {
-    case 'searchRequest':
+    case 'FETCH_MOVIES':
       return {
         ...state,
         fetchInProgress: true,
       };
-    case 'searchSuccess':
+    case 'CANCEL_FETCH_MOVIES':
       return {
         ...state,
         fetchInProgress: false,
       };
-    case 'searchTerm':
+    case 'ADD_SEARCH_TERM':
       return {
         ...state,
-        searchTerm: action.data,
+        searchTerm: action.payload,
       };
-    case 'currentPage':
+    case 'SET_CURRENT_PAGE':
       return {
         ...state,
-        currentPage: action.data,
+        currentPage: action.payload,
       };
-    case 'totalResults':
+    case 'SET_TOTAL_RESULTS':
       return {
         ...state,
-        totalResults: action.data,
+        totalResults: action.payload,
       };
-    case 'adult':
+    case 'SET_AGE_LIMIT':
       return {
         ...state,
-        adult: action.data,
+        adult: action.payload,
       };
-    case 'language':
+    case 'SET_LANGUAGE':
       return {
         ...state,
-        language: action.data,
+        language: action.payload,
       };
-    case 'moviesPerPage':
+    case 'SET_MOVIES_PER_PAGE':
       return {
         ...state,
-        moviesPerPage: action.data,
+        moviesPerPage: action.payload,
       };
-    case 'movies':
+    case 'ADD_MOVIES':
       return {
         ...state,
-        movies: action.data,
+        movies: action.payload,
       };
-    case 'currentMovie':
+    case 'SET_CURRENT_MOVIE':
       return {
         ...state,
-        currentMovie: action.data,
+        currentMovie: action.payload,
       };
     default:
       return state;

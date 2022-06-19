@@ -9,16 +9,16 @@ const Filters = () => {
     switch (e.target.name) {
       case 'adult':
         e.target.checked
-          ? dispatch({ type: 'adult', data: true })
-          : dispatch({ type: 'adult', data: false });
+          ? dispatch({ type: 'SET_AGE_LIMIT', payload: true })
+          : dispatch({ type: 'SET_AGE_LIMIT', payload: false });
         break;
       case 'language':
         e.target.checked
-          ? dispatch({ type: 'language', data: e.target.value })
-          : dispatch({ type: 'language', data: '' });
+          ? dispatch({ type: 'SET_LANGUAGE', payload: e.target.value })
+          : dispatch({ type: 'SET_LANGUAGE', payload: '' });
         break;
       case 'moviesPerPage':
-        dispatch({ type: 'moviesPerPage', data: e.target.value });
+        dispatch({ type: 'SET_MOVIES_PER_PAGE', PAYLOAD: e.target.value });
         break;
     }
   };

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { IState } from '../../store/store';
+import { IState } from '../../store';
 import CardItem from '../CardItem/CardItem';
 
 import './CardList.scss';

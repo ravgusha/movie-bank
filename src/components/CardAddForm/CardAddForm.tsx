@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 import CardItem from '../CardItem/CardItem';
 
 import './CardAddForm.scss';
-import { IState } from '../../store/store';
+import { IState } from '../../store';
 
 interface ICardFields {
   title: string;
@@ -42,7 +42,7 @@ const CardAddForm = () => {
       poster_path: posterUrl,
       id: small_id,
     };
-    dispatch({ type: 'cards', data: newCard });
+    dispatch({ type: 'ADD_CARD', payload: newCard });
     reset();
   };
 

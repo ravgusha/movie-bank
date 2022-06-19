@@ -23,7 +23,7 @@ const CardItem = ({movie }: ICardItem) => {
             data-testid="card"
             src={`https://image.tmdb.org/t/p/w200${movie.poster_path }`}
             onClick={() => {
-              dispatch({ type: 'currentMovie', data: movie });
+              dispatch({ type: 'SET_CURRENT_MOVIE', payload: movie });
               navigate(
                 generatePath('movie/:id', {
                   id: movie.id.toString(),
@@ -37,7 +37,7 @@ const CardItem = ({movie }: ICardItem) => {
           data-testid="card"
           src={`${process.env.PUBLIC_URL}/noImage.jpg`}
           onClick={() => {
-            dispatch({ type: 'currentMovie', data: movie });
+            dispatch({ type: 'SET_CURRENT_MOVIE', payload: movie });
             navigate(
               generatePath('movie/:id', {
                 id: movie.id.toString(),

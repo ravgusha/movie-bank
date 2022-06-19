@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { IState } from '../../store/store';
+import { IState } from '../../store';
 import apiKey from '../../constants';
 
 import './Pagination.scss';
@@ -17,16 +17,16 @@ const Pagination = () => {
 
   const changePage = (pageNumber: number) => {
     const endIndex = Number(moviesPerPage);
-    dispatch({ type: 'searchRequest' });
+    dispatch({ type: 'FETCH_MOVIES' });
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&page=${pageNumber}&include_adult=${adult}&language=${language}`
     )
       .then((data) => data.json())
       .then((data) => {
         const cuttedMovies = data.results.slice(0, endIndex);
-        dispatch({ type: 'movies', data: cuttedMovies });
-        dispatch({ type: 'searchSuccess' });
-        dispatch({ type: 'currentPage', data: data.page });
+        dispatch({ type: 'ADD_MOVIES', payload: cuttedMovies });
+        dispatch({ type: 'CANCEL_FETCH_MOVIES' });
+        dispatch({ type: 'SET_CURRENT_PAGE', payload: data.page });
       })
       .catch((error) => {
         console.log(error);
