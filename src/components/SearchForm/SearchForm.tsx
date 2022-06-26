@@ -1,5 +1,6 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { addMoviesAction, addSearchTermAction, cancelFetchMoviesAction, fetchMoviesAction, setCurrentPageAction, setTotalResultsAction } from '../../actions/movieActions';
 import apiKey from '../../constants';
 import { IState } from '../../store';
 
@@ -16,8 +17,8 @@ const SearchForm= () => {
     if (!searchTerm) {
       return;
     } else {
-      dispatch({ type: 'FETCH_MOVIES' });
-      dispatch({ type: 'SET_CURRENT_PAGE', payload: 0 });
+      dispatch(fetchMoviesAction());
+      dispatch(setCurrentPageAction(0));
       const endIndex = Number(moviesPerPage);
       fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&include_adult=${adult}&language=${language}`
@@ -25,9 +26,9 @@ const SearchForm= () => {
         .then((data) => data.json())
         .then((data) => {
           const cuttedMovies = data.results.slice(0, endIndex);
-          dispatch({ type: 'ADD_MOVIES', payload: cuttedMovies });
-          dispatch({ type: 'CANCEL_FETCH_MOVIES' });
-          dispatch({ type: 'SET_TOTAL_RESULTS', payload: data.total_results });
+          dispatch(addMoviesAction(cuttedMovies));
+          dispatch(cancelFetchMoviesAction());
+          dispatch(setTotalResultsAction(data.total_results));
         })
         .catch((error) => {
           console.log(error);
@@ -37,7 +38,7 @@ const SearchForm= () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    dispatch({ type: 'ADD_SEARCH_TERM', payload: e.target.value });
+    dispatch(addSearchTermAction(e.target.value));
     localStorage.setItem('inputValue', e.target.value);
   };
 

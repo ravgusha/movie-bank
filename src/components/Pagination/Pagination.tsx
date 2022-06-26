@@ -3,6 +3,7 @@ import { IState } from '../../store';
 import apiKey from '../../constants';
 
 import './Pagination.scss';
+import { addMoviesAction, cancelFetchMoviesAction, fetchMoviesAction, setCurrentPageAction } from '../../actions/movieActions';
 
 const Pagination = () => {
   const dispatch = useDispatch();
@@ -17,16 +18,16 @@ const Pagination = () => {
 
   const changePage = (pageNumber: number) => {
     const endIndex = Number(moviesPerPage);
-    dispatch({ type: 'FETCH_MOVIES' });
+    dispatch(fetchMoviesAction());
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&page=${pageNumber}&include_adult=${adult}&language=${language}`
     )
       .then((data) => data.json())
       .then((data) => {
         const cuttedMovies = data.results.slice(0, endIndex);
-        dispatch({ type: 'ADD_MOVIES', payload: cuttedMovies });
-        dispatch({ type: 'CANCEL_FETCH_MOVIES' });
-        dispatch({ type: 'SET_CURRENT_PAGE', payload: data.page });
+        dispatch(addMoviesAction(cuttedMovies));
+        dispatch(cancelFetchMoviesAction());
+        dispatch(setCurrentPageAction(data.page));
       })
       .catch((error) => {
         console.log(error);

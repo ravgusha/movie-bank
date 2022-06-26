@@ -7,6 +7,7 @@ import CardItem from '../CardItem/CardItem';
 
 import './CardAddForm.scss';
 import { IState } from '../../store';
+import { addCardAction } from '../../actions/cardActions';
 
 interface ICardFields {
   title: string;
@@ -42,7 +43,8 @@ const CardAddForm = () => {
       poster_path: posterUrl,
       id: small_id,
     };
-    dispatch({ type: 'ADD_CARD', payload: newCard });
+    
+    dispatch(addCardAction(newCard));
     reset();
   };
 

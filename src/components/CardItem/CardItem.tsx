@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { generatePath, useNavigate } from 'react-router-dom';
+import { setCurrentMovieAction } from '../../actions/movieActions';
 import { ApiCard } from '../CardList/CardList';
 
 import './CardItem.scss';
@@ -23,7 +24,7 @@ const CardItem = ({movie }: ICardItem) => {
             data-testid="card"
             src={`https://image.tmdb.org/t/p/w200${movie.poster_path }`}
             onClick={() => {
-              dispatch({ type: 'SET_CURRENT_MOVIE', payload: movie });
+               setCurrentMovieAction(movie);
               navigate(
                 generatePath('movie/:id', {
                   id: movie.id.toString(),
@@ -37,7 +38,7 @@ const CardItem = ({movie }: ICardItem) => {
           data-testid="card"
           src={`${process.env.PUBLIC_URL}/noImage.jpg`}
           onClick={() => {
-            dispatch({ type: 'SET_CURRENT_MOVIE', payload: movie });
+            dispatch(setCurrentMovieAction(movie));
             navigate(
               generatePath('movie/:id', {
                 id: movie.id.toString(),
