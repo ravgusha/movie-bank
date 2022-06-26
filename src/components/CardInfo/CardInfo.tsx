@@ -26,14 +26,13 @@ const CardInfo = () => {
 
   getTextedGenres();
 
+  const closePopup = () => {
+    dispatch(setCurrentMovieAction());
+    navigate('/');
+  };
+
   return (
-    <div
-      className="info"
-      onClick={() => {
-        dispatch(setCurrentMovieAction(null));
-        navigate('/');
-      }}
-    >
+    <div className="info" onClick={closePopup}>
       {currentMovie ? (
         <div
           className="info__main"
@@ -51,13 +50,7 @@ const CardInfo = () => {
           </div>
           <div className="info__text">
             <div className="info__header">
-              <span
-                onClick={() => {
-                  dispatch(setCurrentMovieAction(null));
-                  navigate('/');
-                }}
-                data-testid="closeBtn"
-              >
+              <span onClick={closePopup} data-testid="closeBtn">
                 ←
               </span>
               <p className="info__title">{currentMovie.title}</p>
