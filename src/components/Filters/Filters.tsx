@@ -1,23 +1,27 @@
 import { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAgeLimitAction, setLanguageAction, setMoviesPerPageAction } from '../../actions/movieActions';
+import {
+  setAgeLimitAction,
+  setLanguageAction,
+  setMoviesPerPageAction,
+} from '../../actions/movieActions';
 
 const Filters = () => {
   const dispatch = useDispatch();
 
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+    const isSet = e.target.checked ? true : false;
+    const value = e.target.value;
+    
     switch (e.target.name) {
       case 'adult':
-        e.target.checked ? dispatch(setAgeLimitAction(true)) : dispatch(setAgeLimitAction(false));
+        dispatch(setAgeLimitAction(isSet));
         break;
       case 'language':
-        e.target.checked
-          ? dispatch(setLanguageAction(e.target.value))
-          : dispatch(setLanguageAction(''));
+        dispatch(setLanguageAction(value));
         break;
       case 'moviesPerPage':
-        dispatch(setMoviesPerPageAction(e.target.value));
+        dispatch(setMoviesPerPageAction(value));
         break;
     }
   };

@@ -14,7 +14,7 @@ export const setAgeLimitAction = (boolean: boolean) => {
     }
 }
 
-export const setLanguageAction = (language: string) => {
+export const setLanguageAction = (language = '') => {
     return {
         type: 'SET_LANGUAGE',
         payload: language
