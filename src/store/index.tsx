@@ -1,5 +1,4 @@
-import { createStore, combineReducers } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
 import cardReducer, { ICardState } from '../reducers/cardReducer';
 import movieReducer, { IMovieState } from '../reducers/movieReducer';
 
@@ -8,8 +7,6 @@ export interface IState {
   movieReducer: IMovieState;
 }
 
-const rootReducer = combineReducers({ cardReducer, movieReducer });
-
-const store = createStore(rootReducer, composeWithDevTools());
+const store = configureStore({reducer: { cardReducer, movieReducer }, devTools: process.env.NODE_ENV !== 'production'});
 
 export default store;

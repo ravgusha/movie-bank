@@ -1,69 +1,21 @@
-import { ApiCard } from "../components/CardList/CardList"
+import { createAction } from "@reduxjs/toolkit";
 
-export const setCurrentMovieAction = (movie: ApiCard | null = null) => {
-    return {
-        type: 'SET_CURRENT_MOVIE',
-        payload: movie
-    }
-}
+export const setCurrentMovieAction = createAction('SET_CURRENT_MOVIE');
 
-export const setAgeLimitAction = (boolean: boolean) => {
-    return {
-        type: 'SET_AGE_LIMIT',
-        payload: boolean
-    }
-}
+export const setAgeLimitAction = createAction('SET_AGE_LIMIT');
 
-export const setLanguageAction = (language = '') => {
-    return {
-        type: 'SET_LANGUAGE',
-        payload: language
-    }
-}
+export const setLanguageAction = createAction('SET_LANGUAGE');
 
-export const setCurrentPageAction = (page: number) => {
-    return {
-        type: 'SET_CURRENT_PAGE',
-        payload: page
-    }
-}
+export const setCurrentPageAction = createAction('SET_CURRENT_PAGE');
 
-export const setMoviesPerPageAction = (num: string) => {
-    return {
-        type: 'SET_MOVIES_PER_PAGE',
-        payload: num
-    }
-}
+export const setMoviesPerPageAction = createAction('SET_MOVIES_PER_PAGE');
 
-export const setTotalResultsAction = (num: number) => {
-    return {
-        type: 'SET_TOTAL_RESULTS',
-        payload: num
-    }
-}
+export const setTotalResultsAction = ('SET_TOTAL_RESULTS');
 
-export const fetchMoviesAction = () => {
-    return {
-        type: 'FETCH_MOVIES'
-    }
-}
+export const fetchMoviesAction = createAction('FETCH_MOVIES');
 
-export const cancelFetchMoviesAction = () => {
-    return {
-        type: 'CANCEL_FETCH_MOVIES'
-    }
-}
+export const cancelFetchMoviesAction = createAction('CANCEL_FETCH_MOVIES');
 
-export const addMoviesAction = (movies: ApiCard[]) => {
-    return {
-        type: 'ADD_MOVIES',
-        payload: movies
-    }
-}
+export const addMoviesAction = createAction('ADD_MOVIES');
 
-export const addSearchTermAction = (term: string) => {
-    return {
-        type: 'ADD_SEARCH_TERM',
-        payload: term
-    }
-}
+export const addSearchTermAction = createAction('ADD_SEARCH_TERM');
