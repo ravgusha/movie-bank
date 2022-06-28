@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setCurrentMovieAction } from '../../actions/movieActions';
 import { genresList, IGenre } from '../../App';
+import { setCurrentMovie } from '../CardList/movieSlice';
 import { IState } from '../../store';
 
 import './CardInfo.scss';
 
 const CardInfo = () => {
-  const currentMovie = useSelector((state: IState) => state.movieReducer.currentMovie);
+  const currentMovie = useSelector((state: IState) => state.movie.currentMovie);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const CardInfo = () => {
   getTextedGenres();
 
   const closePopup = () => {
-    dispatch(setCurrentMovieAction(null));
+    dispatch(setCurrentMovie(null));
     navigate('/');
   };
 

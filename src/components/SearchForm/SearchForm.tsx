@@ -1,6 +1,6 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMoviesAction, addSearchTermAction, cancelFetchMoviesAction, fetchMoviesAction, setCurrentPageAction, setTotalResultsAction } from '../../actions/movieActions';
+import { addMovies, addSearchTerm, cancelFetchMovies, fetchMovies, setCurrentPage, setTotalResults } from '../CardList/movieSlice';
 import apiKey from '../../constants';
 import { IState } from '../../store';
 
@@ -9,7 +9,7 @@ import './SearchForm.scss';
 const SearchForm= () => {
   const dispatch = useDispatch();
   const { searchTerm, moviesPerPage, adult, language } =
-    useSelector((state: IState) => state.movieReducer);
+    useSelector((state: IState) => state.movie);
     
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,8 +17,8 @@ const SearchForm= () => {
     if (!searchTerm) {
       return;
     } else {
-      dispatch(fetchMoviesAction());
-      dispatch(setCurrentPageAction(0));
+      dispatch(fetchMovies());
+      dispatch(setCurrentPage(0));
       const endIndex = Number(moviesPerPage);
       fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&include_adult=${adult}&language=${language}`
@@ -26,9 +26,9 @@ const SearchForm= () => {
         .then((data) => data.json())
         .then((data) => {
           const cuttedMovies = data.results.slice(0, endIndex);
-          dispatch(addMoviesAction(cuttedMovies));
-          dispatch(cancelFetchMoviesAction());
-          dispatch(setTotalResultsAction(data.total_results));
+          dispatch(addMovies(cuttedMovies));
+          dispatch(cancelFetchMovies());
+          dispatch(setTotalResults(data.total_results));
         })
         .catch((error) => {
           console.log(error);
@@ -38,7 +38,7 @@ const SearchForm= () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    dispatch(addSearchTermAction(e.target.value));
+    dispatch(addSearchTerm(e.target.value));
     localStorage.setItem('inputValue', e.target.value);
   };
 

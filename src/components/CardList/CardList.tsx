@@ -21,7 +21,7 @@ export interface ApiCard {
 }
 
 const CardList = () => {
-  const movies = useSelector((state: IState) => state.movieReducer.movies);
+  const movies = useSelector((state: IState) => state.movie.movies);
   return (
     <ul data-testid="cards" className="cards">
       {movies?.map((movie, i) => {

@@ -3,14 +3,14 @@ import { IState } from '../../store';
 import apiKey from '../../constants';
 
 import './Pagination.scss';
-import { addMoviesAction, cancelFetchMoviesAction, fetchMoviesAction, setCurrentPageAction } from '../../actions/movieActions';
+import { fetchMovies, addMovies, cancelFetchMovies, setCurrentPage } from '../CardList/movieSlice';
 
 const Pagination = () => {
   const dispatch = useDispatch();
 
 
   const { searchTerm, moviesPerPage, currentPage, adult, language, totalResults } = useSelector(
-    (state: IState) => state.movieReducer
+    (state: IState) => state.movie
   );
 
   const pageLinks = [];
@@ -18,16 +18,16 @@ const Pagination = () => {
 
   const changePage = (pageNumber: number) => {
     const endIndex = Number(moviesPerPage);
-    dispatch(fetchMoviesAction());
+    dispatch(fetchMovies());
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&page=${pageNumber}&include_adult=${adult}&language=${language}`
     )
       .then((data) => data.json())
       .then((data) => {
         const cuttedMovies = data.results.slice(0, endIndex);
-        dispatch(addMoviesAction(cuttedMovies));
-        dispatch(cancelFetchMoviesAction());
-        dispatch(setCurrentPageAction(data.page));
+        dispatch(addMovies(cuttedMovies));
+        dispatch(cancelFetchMovies());
+        dispatch(setCurrentPage(data.page));
       })
       .catch((error) => {
         console.log(error);

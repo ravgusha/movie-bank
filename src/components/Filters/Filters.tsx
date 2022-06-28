@@ -1,10 +1,6 @@
 import { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  setAgeLimitAction,
-  setLanguageAction,
-  setMoviesPerPageAction,
-} from '../../actions/movieActions';
+import { setAgeLimit, setLanguage, setMoviesPerPage } from '../CardList/movieSlice';
 
 const Filters = () => {
   const dispatch = useDispatch();
@@ -15,13 +11,13 @@ const Filters = () => {
     
     switch (e.target.name) {
       case 'adult':
-        dispatch(setAgeLimitAction(isSet));
+        dispatch(setAgeLimit(isSet));
         break;
       case 'language':
-        dispatch(setLanguageAction(value));
+        dispatch(setLanguage(value));
         break;
       case 'moviesPerPage':
-        dispatch(setMoviesPerPageAction(value));
+        dispatch(setMoviesPerPage(value));
         break;
     }
   };

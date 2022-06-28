@@ -7,7 +7,7 @@ import CardItem from '../CardItem/CardItem';
 
 import './CardAddForm.scss';
 import { IState } from '../../store';
-import { addCardAction } from '../../actions/cardActions';
+import { addCard } from './cardSlice';
 
 interface ICardFields {
   title: string;
@@ -20,7 +20,7 @@ interface ICardFields {
 
 const CardAddForm = () => {
   const dispatch = useDispatch();
-  const cards = useSelector((state: IState) => state.cardReducer.cards);
+  const cards = useSelector((state: IState) => state.card.cards);
   
   const {
     register,
@@ -44,7 +44,7 @@ const CardAddForm = () => {
       id: small_id,
     };
     
-    dispatch(addCardAction(newCard));
+    dispatch(addCard(newCard));
     reset();
   };
 
