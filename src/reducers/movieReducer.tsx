@@ -1,4 +1,4 @@
-import { createReducer, PayloadAction } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
 import {
   cancelFetchMoviesAction,
   fetchMoviesAction,
@@ -25,19 +25,7 @@ export interface IMovieState {
   currentMovie: ApiCard | null;
 }
 
-type ActionType =
-  | { type: 'FETCH_MOVIES' }
-  | { type: 'CANCEL_FETCH_MOVIES' }
-  | { type: 'ADD_SEARCH_TERM'; payload: string }
-  | { type: 'SET_CURRENT_PAGE'; payload: number }
-  | { type: 'SET_TOTAL_RESULTS'; payload: number }
-  | { type: 'SET_AGE_LIMIT'; payload: boolean }
-  | { type: 'SET_LANGUAGE'; payload: string }
-  | { type: 'SET_MOVIES_PER_PAGE'; payload: string }
-  | { type: 'ADD_MOVIES'; payload: [] }
-  | { type: 'SET_CURRENT_MOVIE'; payload: ApiCard | null };
-
-const defaultState = {
+const defaultState: IMovieState = {
   searchTerm: '',
   fetchInProgress: false,
   totalResults: 0,

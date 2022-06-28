@@ -27,7 +27,7 @@ const CardInfo = () => {
   getTextedGenres();
 
   const closePopup = () => {
-    dispatch(setCurrentMovieAction());
+    dispatch(setCurrentMovieAction(null));
     navigate('/');
   };
 
