@@ -7,10 +7,7 @@ import './Pagination.scss';
 const Pagination = () => {
   const dispatch = useDispatch();
 
-
-  const { currentPage, totalResults } = useSelector(
-    (state: IState) => state.movie
-  );
+  const { currentPage, totalResults } = useSelector((state: IState) => state.movie);
 
   const pageLinks = [];
   const pages = Math.ceil(totalResults / 20);

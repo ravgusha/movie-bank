@@ -8,7 +8,7 @@ const Filters = () => {
   const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
     const isSet = e.target.checked ? true : false;
     const value = e.target.value;
-    
+
     switch (e.target.name) {
       case 'adult':
         dispatch(setAgeLimit(isSet));

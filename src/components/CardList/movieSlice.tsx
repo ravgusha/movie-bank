@@ -41,26 +41,11 @@ const movieSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
-    addMovies: (state, action) => {
-      state.movies = action.payload;
-    },
-    startfetchMovies: (state) => {
-      state.fetchInProgress = true;
-    },
-    cancelFetchMovies: (state) => {
-      state.fetchInProgress = false;
-    },
     addSearchTerm: (state, action) => {
       state.searchTerm = action.payload;
     },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
-    },
     setMoviesPerPage: (state, action) => {
       state.moviesPerPage = action.payload;
-    },
-    setTotalResults: (state, action) => {
-      state.totalResults = action.payload;
     },
     setCurrentMovie: (state, action) => {
       state.currentMovie = action.payload;
@@ -102,15 +87,5 @@ const movieSlice = createSlice({
 const { actions, reducer } = movieSlice;
 
 export default reducer;
-export const {
-  addMovies,
-  startfetchMovies,
-  cancelFetchMovies,
-  addSearchTerm,
-  setCurrentPage,
-  setMoviesPerPage,
-  setTotalResults,
-  setCurrentMovie,
-  setAgeLimit,
-  setLanguage,
-} = actions;
+export const { addSearchTerm, setMoviesPerPage, setCurrentMovie, setAgeLimit, setLanguage } =
+  actions;

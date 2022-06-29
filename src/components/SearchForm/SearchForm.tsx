@@ -1,18 +1,13 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addSearchTerm,
-  sendSearchRequest,
-} from '../CardList/movieSlice';
+import { addSearchTerm, sendSearchRequest } from '../CardList/movieSlice';
 import { IState } from '../../store';
 
 import './SearchForm.scss';
 
 const SearchForm = () => {
   const dispatch = useDispatch();
-  const { searchTerm } = useSelector(
-    (state: IState) => state.movie
-  );
+  const { searchTerm } = useSelector((state: IState) => state.movie);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,28 +15,7 @@ const SearchForm = () => {
     if (!searchTerm) {
       return;
     } else {
-      // const obj = {
-      //   searchTerm,
-      //   adult,
-      //   language,
-      // };
       dispatch(sendSearchRequest(1));
-      // dispatch(startfetchMovies());
-      // dispatch(setCurrentPage(0));
-      // const endIndex = Number(moviesPerPage);
-      // fetch(
-      //   `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&include_adult=${adult}&language=${language}`
-      // )
-      //   .then((data) => data.json())
-      //   .then((data) => {
-      //     const cuttedMovies = data.results.slice(0, endIndex);
-      //     dispatch(addMovies(cuttedMovies));
-      //     dispatch(cancelFetchMovies());
-      //     dispatch(setTotalResults(data.total_results));
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
     }
   };
 
