@@ -1,6 +1,6 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMovies, addSearchTerm, cancelFetchMovies, fetchMovies, setCurrentPage, setTotalResults } from '../CardList/movieSlice';
+import { addMovies, addSearchTerm, cancelFetchMovies, startfetchMovies, setCurrentPage, setTotalResults } from '../CardList/movieSlice';
 import apiKey from '../../constants';
 import { IState } from '../../store';
 
@@ -17,7 +17,8 @@ const SearchForm= () => {
     if (!searchTerm) {
       return;
     } else {
-      dispatch(fetchMovies());
+      // dispatch(sendSearchRequest());
+      dispatch(startfetchMovies());
       dispatch(setCurrentPage(0));
       const endIndex = Number(moviesPerPage);
       fetch(

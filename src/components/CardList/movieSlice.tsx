@@ -1,4 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
+import apiKey from '../../constants';
+import { IState } from '../../store';
 import { ApiCard } from './CardList';
 
 export interface IMovieState {
@@ -25,6 +28,16 @@ const initialState: IMovieState = {
   currentMovie: null,
 };
 
+// const { searchTerm, moviesPerPage, adult, language } =
+// useSelector((state: IState) => state.movie);
+
+export const sendSearchRequest = createAsyncThunk('movies/sendSearchRequest', () => {
+  const { searchTerm, adult, language } = useSelector((state: IState) => state.movie);
+  fetch(
+    `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&include_adult=${adult}&language=${language}`
+  );
+});
+
 const movieSlice = createSlice({
   name: 'movies',
   initialState,
@@ -32,7 +45,7 @@ const movieSlice = createSlice({
     addMovies: (state, action) => {
       state.movies = action.payload;
     },
-    fetchMovies: (state) => {
+    startfetchMovies: (state) => {
       state.fetchInProgress = true;
     },
     cancelFetchMovies: (state) => {
@@ -60,6 +73,26 @@ const movieSlice = createSlice({
       state.language = action.payload;
     },
   },
+  // ПОКА НЕ РАБОТАЕТ
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(sendSearchRequest.pending, (state) => {
+  //       state.fetchInProgress = true;
+  //     })
+  //     .addCase(sendSearchRequest.fulfilled, (state, action) => {
+  //       const { moviesPerPage } = useSelector((state: IState) => state.movie);
+  //       const endIndex = Number(moviesPerPage);
+  //       const cuttedMovies = action.payload.results.slice(0, endIndex);
+
+  //       state.fetchInProgress = false;
+  //       state.currentPage = 0;
+  //       state.movies = cuttedMovies;
+  //       state.totalResults = action.payload.total_results;
+  //     })
+  //     .addCase(sendSearchRequest.rejected, () => {
+  //       console.log('error');
+  //     }).addDefaultCase(() => {});
+  // },
 });
 
 const { actions, reducer } = movieSlice;
@@ -67,7 +100,7 @@ const { actions, reducer } = movieSlice;
 export default reducer;
 export const {
   addMovies,
-  fetchMovies,
+  startfetchMovies,
   cancelFetchMovies,
   addSearchTerm,
   setCurrentPage,

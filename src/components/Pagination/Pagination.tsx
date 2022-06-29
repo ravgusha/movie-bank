@@ -3,7 +3,7 @@ import { IState } from '../../store';
 import apiKey from '../../constants';
 
 import './Pagination.scss';
-import { fetchMovies, addMovies, cancelFetchMovies, setCurrentPage } from '../CardList/movieSlice';
+import { startfetchMovies, addMovies, cancelFetchMovies, setCurrentPage } from '../CardList/movieSlice';
 
 const Pagination = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Pagination = () => {
 
   const changePage = (pageNumber: number) => {
     const endIndex = Number(moviesPerPage);
-    dispatch(fetchMovies());
+    dispatch(startfetchMovies());
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&page=${pageNumber}&include_adult=${adult}&language=${language}`
     )
