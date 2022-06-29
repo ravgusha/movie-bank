@@ -1,15 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../store';
-import apiKey from '../../constants';
+import { sendSearchRequest } from '../CardList/movieSlice';
 
 import './Pagination.scss';
-import { startfetchMovies, addMovies, cancelFetchMovies, setCurrentPage } from '../CardList/movieSlice';
 
 const Pagination = () => {
   const dispatch = useDispatch();
 
 
-  const { searchTerm, moviesPerPage, currentPage, adult, language, totalResults } = useSelector(
+  const { currentPage, totalResults } = useSelector(
     (state: IState) => state.movie
   );
 
@@ -17,21 +16,7 @@ const Pagination = () => {
   const pages = Math.ceil(totalResults / 20);
 
   const changePage = (pageNumber: number) => {
-    const endIndex = Number(moviesPerPage);
-    dispatch(startfetchMovies());
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&page=${pageNumber}&include_adult=${adult}&language=${language}`
-    )
-      .then((data) => data.json())
-      .then((data) => {
-        const cuttedMovies = data.results.slice(0, endIndex);
-        dispatch(addMovies(cuttedMovies));
-        dispatch(cancelFetchMovies());
-        dispatch(setCurrentPage(data.page));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    dispatch(sendSearchRequest(pageNumber));
   };
 
   for (let i = 1; i < pages + 1; i++) {

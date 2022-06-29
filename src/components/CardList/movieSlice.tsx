@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
 import apiKey from '../../constants';
 import { IState } from '../../store';
 import { ApiCard } from './CardList';
@@ -28,15 +27,15 @@ const initialState: IMovieState = {
   currentMovie: null,
 };
 
-// const { searchTerm, moviesPerPage, adult, language } =
-// useSelector((state: IState) => state.movie);
-
-export const sendSearchRequest = createAsyncThunk('movies/sendSearchRequest', () => {
-  const { searchTerm, adult, language } = useSelector((state: IState) => state.movie);
-  fetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}&include_adult=${adult}&language=${language}`
-  );
-});
+export const sendSearchRequest = createAsyncThunk(
+  'movies/sendSearchRequest',
+  async (page: number, { getState }) => {
+    const { movie }: IState = getState();
+    return await fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movie.searchTerm}&page=${page}&include_adult=${movie.adult}&language=${movie.language}`
+    ).then((data) => data.json());
+  }
+);
 
 const movieSlice = createSlice({
   name: 'movies',
@@ -73,26 +72,31 @@ const movieSlice = createSlice({
       state.language = action.payload;
     },
   },
-  // ПОКА НЕ РАБОТАЕТ
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(sendSearchRequest.pending, (state) => {
-  //       state.fetchInProgress = true;
-  //     })
-  //     .addCase(sendSearchRequest.fulfilled, (state, action) => {
-  //       const { moviesPerPage } = useSelector((state: IState) => state.movie);
-  //       const endIndex = Number(moviesPerPage);
-  //       const cuttedMovies = action.payload.results.slice(0, endIndex);
 
-  //       state.fetchInProgress = false;
-  //       state.currentPage = 0;
-  //       state.movies = cuttedMovies;
-  //       state.totalResults = action.payload.total_results;
-  //     })
-  //     .addCase(sendSearchRequest.rejected, () => {
-  //       console.log('error');
-  //     }).addDefaultCase(() => {});
-  // },
+  extraReducers: (builder) => {
+    builder
+      .addCase(sendSearchRequest.pending, (state) => {
+        console.log('1');
+        state.fetchInProgress = true;
+      })
+      .addCase(sendSearchRequest.fulfilled, (state, action) => {
+        console.log('2');
+        const moviesPerPage = state.moviesPerPage;
+        console.log(state.moviesPerPage);
+        const endIndex = Number(moviesPerPage);
+        const cuttedMovies = action.payload.results.slice(0, endIndex);
+
+        state.fetchInProgress = false;
+        state.currentPage = action.payload.page;
+        state.movies = cuttedMovies;
+        state.totalResults = action.payload.total_results;
+      })
+      .addCase(sendSearchRequest.rejected, () => {
+        console.log('3');
+        console.log('error');
+      })
+      .addDefaultCase(() => {});
+  },
 });
 
 const { actions, reducer } = movieSlice;
