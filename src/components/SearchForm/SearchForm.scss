@@ -1,0 +1,37 @@
+@use '../../styles/variables' as variables;
+
+.search-form {
+  width: 750px;
+  height: 70px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 0 7px 1px #d3d3d3;
+
+  input {
+    flex-grow: 2;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    background: url(../../../public/search.svg) no-repeat scroll 7px 25px;
+    border-radius: 10px;
+    padding-left: 45px;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  button {
+    font-family: 'Montserrat', sans-serif;
+    background-color: variables.$main-color;
+    outline: none;
+    border: none;
+    color: white;
+    width: 175px;
+    height: 46px;
+    align-self: center;
+    margin-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}

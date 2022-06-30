@@ -1,0 +1,52 @@
+@use '../../styles/variables' as variables;
+
+.header {
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 25px;
+  }
+
+  &__bottom {
+    text-decoration: underline;
+
+    span {
+      position: relative;
+      color: white;
+      background: #6935fd;
+      padding: 10px 0 10px 10px;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    
+    span:after {
+      width: 0;
+      height: 0;
+      border-top: 19px solid transparent;
+      border-bottom: 19px solid transparent;
+      border-left: 20px solid #6935fd;
+      position: absolute;
+      right: 0;
+      transform: translateX(100%);
+      content: '';
+      top: 0;
+    }
+  }
+
+  &__logo {
+    color: variables.$main-color;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  &__links {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  a {
+    text-decoration: none;
+    padding-right: 20px;
+  }
+}
