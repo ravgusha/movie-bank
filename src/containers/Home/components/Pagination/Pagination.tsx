@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { IState } from '../../store';
-import { sendSearchRequest } from '../CardList/movieSlice';
+import { IState } from '../../../../redux/configureStore';
+import { sendSearchRequest } from '../../../../redux/movieSlice';
 
 import './Pagination.scss';
 

@@ -1,7 +1,7 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSearchTerm, sendSearchRequest } from '../CardList/movieSlice';
-import { IState } from '../../store';
+import { addSearchTerm, sendSearchRequest } from '../../../../redux/movieSlice';
+import { IState } from '../../../../redux/configureStore';
 
 import './SearchForm.scss';
 

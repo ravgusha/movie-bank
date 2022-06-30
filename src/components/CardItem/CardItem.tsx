@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { setCurrentMovie } from '../CardList/movieSlice';
+import { setCurrentMovie } from '../../redux/movieSlice';
 import { ApiCard } from '../CardList/CardList';
 
 import './CardItem.scss';

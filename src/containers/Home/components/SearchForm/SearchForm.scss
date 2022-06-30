@@ -1,4 +1,4 @@
-@use '../../styles/variables' as variables;
+@use '../../../../styles/variables' as variables;
 
 .search-form {
   width: 750px;
@@ -12,7 +12,7 @@
     flex-grow: 2;
     border: none;
     font-family: 'Montserrat', sans-serif;
-    background: url(../../../public/search.svg) no-repeat scroll 7px 25px;
+    background: url(../../../../images/search.svg) no-repeat scroll 7px 25px;
     border-radius: 10px;
     padding-left: 45px;
   }

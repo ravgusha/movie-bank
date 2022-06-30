@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 
-import CardItem from '../CardItem/CardItem';
+import CardItem from '../../../../components/CardItem/CardItem';
 
 import './CardAddForm.scss';
-import { IState } from '../../store';
-import { addCard } from './cardSlice';
+import { IState } from '../../../../redux/configureStore';
+import { addCard } from '../../../../redux/cardSlice';
 
 interface ICardFields {
   title: string;

@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAgeLimit, setLanguage, setMoviesPerPage } from '../CardList/movieSlice';
+import { setAgeLimit, setLanguage, setMoviesPerPage } from '../../../../redux/movieSlice';
 
 const Filters = () => {
   const dispatch = useDispatch();

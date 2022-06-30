@@ -1,8 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
-
-import { HomePage } from '../../pages/HomePage';
+import { Home } from '../../containers/Home';
 import { fakeGenres, mockResponse } from '../../constants';
 import userEvent from '@testing-library/user-event';
 import * as constants from '../../App';
@@ -23,7 +22,7 @@ describe('CardInfo', () => {
   test('should render card info popup after click on card', async () => {
     render(
       <BrowserRouter>
-        <HomePage />
+        <Home />
       </BrowserRouter>
     );
 
@@ -40,7 +39,7 @@ describe('CardInfo', () => {
   test('should close card info popup after click on close button', async () => {
     render(
       <BrowserRouter>
-        <HomePage />
+        <Home/>
       </BrowserRouter>
     );
 

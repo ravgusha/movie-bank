@@ -2,13 +2,13 @@ import { Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import Header from './components/Header/Header';
-import { NotFoundPage } from './pages/NotFoundPage';
-import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { CardAddPage } from './pages/CardAddPage';
+import { Home } from './containers/Home';
+import { NotFound } from './containers/NotFound';
+import { CardAdd } from './containers/CardAdd';
+import { About } from './containers/About';
 import CardInfo from './components/CardInfo/CardInfo';
 import apiKey from './constants';
-import store from './store';
+import store from './redux/configureStore';
 
 import './App.scss';
 
@@ -20,7 +20,6 @@ export interface IGenre {
 }
 
 const App = () => {
-
   const getGenresList = () => {
     fetch(
       `https://thingproxy.freeboard.io/fetch/https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`
@@ -38,10 +37,10 @@ const App = () => {
       <div className="container">
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/add" element={<CardAddPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/add" element={<CardAdd />} />
+          <Route path="*" element={<NotFound />} />
           <Route path="movie/:currentMovie" element={<CardInfo />} />
         </Routes>
       </div>

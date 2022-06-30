@@ -2,9 +2,9 @@ import { screen, render, fireEvent, waitFor, cleanup } from '@testing-library/re
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
 import SearchForm from './SearchForm';
-import { HomePage } from '../../pages/HomePage';
-import apiKey, { fakeLocalStorage, mockResponse } from '../../constants';
+import apiKey, { fakeLocalStorage, mockResponse } from '../../../../constants';
 import { BrowserRouter } from 'react-router-dom';
+import { Home } from '../..';
 
 describe('Search form', () => {
   const handleSubmit = jest.fn();
@@ -31,12 +31,12 @@ describe('Search form', () => {
   });
 
   test('renders input if local storage is empty', () => {
-    render(<HomePage />);
+    render(<Home />);
     expect(screen.getByDisplayValue('')).toBeInTheDocument();
   });
 
   test('handle change event', () => {
-    render(<HomePage />);
+    render(<Home />);
     expect(screen.getByDisplayValue('')).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole('textbox'), {
@@ -48,12 +48,12 @@ describe('Search form', () => {
 
   test('renders input if local storage not empty', () => {
     window.localStorage.setItem('inputValue', 'Spiderman');
-    render(<HomePage />);
+    render(<Home />);
     expect(screen.getByDisplayValue('Spiderman')).toBeInTheDocument();
   });
 
   test('display spinner', () => {
-    render(<HomePage />);
+    render(<Home />);
     userEvent.type(screen.getByRole('textbox'), 'The Witcher');
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
 
@@ -67,7 +67,7 @@ describe('Search form', () => {
       })
     ) as jest.Mock;
 
-    render(<HomePage />);
+    render(<Home />);
     userEvent.type(screen.getByRole('textbox'), 'Witcher');
     fireEvent.submit(screen.getByRole('button', { name: /search/i }));
     expect(screen.getByRole('textbox')).toHaveValue('Witcher');
@@ -85,7 +85,7 @@ describe('Search form', () => {
 
     render(
       <BrowserRouter>
-        <HomePage />
+        <Home />
       </BrowserRouter>
     );
 

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import card, { ICardState } from '../components/CardAddForm/cardSlice';
-import movie, { IMovieState } from '../components/CardList/movieSlice';
+import card, { ICardState } from './cardSlice';
+import movie, { IMovieState } from './movieSlice';
 
 export interface IState {
   card: ICardState;

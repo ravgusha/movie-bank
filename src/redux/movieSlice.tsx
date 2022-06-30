@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import apiKey from '../../constants';
-import { IState } from '../../store';
-import { ApiCard } from './CardList';
+import apiKey from '../constants';
+import { IState } from './configureStore';
+import { ApiCard } from '../components/CardList/CardList';
 
 export interface IMovieState {
   searchTerm: string;
