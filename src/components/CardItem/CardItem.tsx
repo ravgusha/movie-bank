@@ -1,20 +1,20 @@
 import { useDispatch } from 'react-redux';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { setCurrentMovie } from '../../redux/movieSlice';
-import { ApiCard } from '../CardList/CardList';
+import { ICard } from '../CardList/CardList';
 
 import './CardItem.scss';
 
 export type ICardItem = {
   key: number;
-  movie: ApiCard;
+  movie: ICard;
 };
 
 const CardItem = ({ movie }: ICardItem) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const openPopup = (movie: ApiCard) => {
+  const openPopup = (movie: ICard) => {
     dispatch(setCurrentMovie(movie));
     navigate(
       generatePath('movie/:id', {

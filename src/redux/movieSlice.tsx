@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import apiKey from '../constants';
 import { IState } from './configureStore';
-import { ApiCard } from '../components/CardList/CardList';
+import { ICard } from '../components/CardList/CardList';
 
 export interface IMovieState {
   searchTerm: string;
@@ -11,8 +11,8 @@ export interface IMovieState {
   adult: boolean;
   language: string;
   moviesPerPage: string;
-  movies: Array<ApiCard> | [];
-  currentMovie: ApiCard | null;
+  movies: Array<ICard> | [];
+  currentMovie: ICard | null;
 }
 
 const initialState: IMovieState = {

@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ApiCard } from '../components/CardList/CardList';
+import { ICard } from '../components/CardList/CardList';
 
 export interface ICardState {
-  cards: Array<ApiCard>;
+  cards: Array<ICard>;
 }
 
 const initialState: ICardState = {

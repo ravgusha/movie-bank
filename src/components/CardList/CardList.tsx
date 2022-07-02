@@ -3,7 +3,7 @@ import { IState } from '../../redux/configureStore';
 import CardItem from '../CardItem/CardItem';
 
 import './CardList.scss';
-export interface ApiCard {
+export interface ICard {
   adult: boolean;
   backdrop_path?: string;
   genre_ids?: number[];
