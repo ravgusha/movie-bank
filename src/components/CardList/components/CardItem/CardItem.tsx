@@ -1,14 +1,9 @@
 import { useDispatch } from 'react-redux';
 import { generatePath, useNavigate } from 'react-router-dom';
-import { setCurrentMovie } from '../../redux/movieSlice';
-import { ICard } from '../CardList/CardList';
+import { setCurrentMovie } from '../../../../redux/movieSlice';
+import { ICardItem, ICard } from '../../../../redux/types';
 
 import './CardItem.scss';
-
-export type ICardItem = {
-  key: number;
-  movie: ICard;
-};
 
 const CardItem = ({ movie }: ICardItem) => {
   const dispatch = useDispatch();

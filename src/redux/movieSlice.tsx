@@ -1,21 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import apiKey from '../constants';
-import { IState } from './configureStore';
-import { ICard } from '../components/CardList/CardList';
+import { IMovieState, IResponse, IState } from './types';
 
-export interface IMovieState {
-  searchTerm: string;
-  fetchInProgress: boolean;
-  totalResults: number;
-  currentPage: number;
-  adult: boolean;
-  language: string;
-  moviesPerPage: string;
-  movies: Array<ICard> | [];
-  currentMovie: ICard | null;
-}
-
-const initialState: IMovieState = {
+export const initialState: IMovieState = {
   searchTerm: '',
   fetchInProgress: false,
   totalResults: 0,
@@ -27,7 +14,7 @@ const initialState: IMovieState = {
   currentMovie: null,
 };
 
-export const sendSearchRequest = createAsyncThunk(
+export const sendSearchRequest = createAsyncThunk<IResponse, number, { state: IState }>(
   'movies/sendSearchRequest',
   async (page: number, { getState }) => {
     const { movie }: IState = getState();

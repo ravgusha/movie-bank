@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICard } from '../components/CardList/CardList';
+import { ICardState } from './types';
 
-export interface ICardState {
-  cards: Array<ICard>;
-}
 
 const initialState: ICardState = {
   cards: [],

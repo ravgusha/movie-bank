@@ -1,12 +1,14 @@
 import { FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSearchTerm, sendSearchRequest } from '../../../../redux/movieSlice';
-import { IState } from '../../../../redux/configureStore';
+import store from '../../../../redux/configureStore';
 
 import './SearchForm.scss';
+import { IState } from '../../../../redux/types';
 
 const SearchForm = () => {
-  const dispatch = useDispatch();
+  type AppDispatch = typeof store.dispatch;
+  const dispatch = useDispatch<AppDispatch>();
   const { searchTerm } = useSelector((state: IState) => state.movie);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

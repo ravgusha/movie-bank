@@ -6,18 +6,15 @@ import { Home } from './containers/Home';
 import { NotFound } from './containers/NotFound';
 import { CardAdd } from './containers/CardAdd';
 import { About } from './containers/About';
-import CardInfo from './components/CardInfo/CardInfo';
+
 import apiKey from './constants';
 import store from './redux/configureStore';
+import CardInfo from './components/CardList/components/CardInfo/CardInfo';
+import { IGenre } from './redux/types';
 
 import './App.scss';
 
 export let genresList: Array<IGenre>;
-
-export interface IGenre {
-  id: number;
-  name: string;
-}
 
 const App = () => {
   const getGenresList = () => {

@@ -4,7 +4,7 @@ import './Header.scss';
 
 const Header = () => {
   const location = useLocation();
-  
+
   function getCurrentPage() {
     if (location.pathname === '/') {
       return 'Homepage';
@@ -14,6 +14,10 @@ const Header = () => {
       return 'Create Card';
     } else if (location.pathname.includes('movie')) {
       return 'Movie card';
+    } else if (location.pathname.includes('contacts')) {
+      return 'Contacts';
+    } else if (location.pathname.includes('team')) {
+      return 'Our team';
     }
   }
 

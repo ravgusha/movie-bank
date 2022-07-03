@@ -1,10 +1,11 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Home } from '../../containers/Home';
-import { fakeGenres, mockResponse } from '../../constants';
+
 import userEvent from '@testing-library/user-event';
-import * as constants from '../../App';
+import * as constants from '../../../../App';
+import { mockResponse, fakeGenres } from '../../../../constants';
+import { Home } from '../../../../containers/Home';
 
 describe('CardInfo', () => {
   beforeAll(() => {

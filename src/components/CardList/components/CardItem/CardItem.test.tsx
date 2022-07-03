@@ -1,8 +1,8 @@
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import App from '../../../../App';
+import { mockResponse } from '../../../../constants';
 
-import App from '../../App';
-import { mockResponse } from '../../constants';
 
 describe('Card item', () => {
   test('renders card component', async () => {

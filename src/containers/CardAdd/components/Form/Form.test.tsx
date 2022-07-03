@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CardAddForm from './CardAddForm';
+import CardAddForm from './Form';
 import userEvent from '@testing-library/user-event';
 
 describe('Card add form', () => {

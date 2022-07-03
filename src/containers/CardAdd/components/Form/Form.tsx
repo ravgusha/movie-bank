@@ -3,25 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 
-import CardItem from '../../../../components/CardItem/CardItem';
-
-import './CardAddForm.scss';
-import { IState } from '../../../../redux/configureStore';
 import { addCard } from '../../../../redux/cardSlice';
+import CardItem from '../../../../components/CardList/components/CardItem/CardItem';
+import { IState, ICardFields } from '../../../../redux/types';
 
-interface ICardFields {
-  title: string;
-  date: string;
-  language: string;
-  ageLimit: boolean;
-  video: boolean;
-  poster: FileList;
-}
+import './Form.scss';
 
 const CardAddForm = () => {
   const dispatch = useDispatch();
   const cards = useSelector((state: IState) => state.card.cards);
-  
+
   const {
     register,
     handleSubmit,
@@ -43,7 +34,7 @@ const CardAddForm = () => {
       poster_path: posterUrl,
       id: small_id,
     };
-    
+
     dispatch(addCard(newCard));
     reset();
   };

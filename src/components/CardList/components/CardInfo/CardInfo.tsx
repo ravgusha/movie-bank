@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { genresList, IGenre } from '../../App';
-import { setCurrentMovie } from '../../redux/movieSlice';
-import { IState } from '../../redux/configureStore';
+import { genresList } from '../../../../App';
+import { setCurrentMovie } from '../../../../redux/movieSlice';
+import { IState, IGenre } from '../../../../redux/types';
 
 import './CardInfo.scss';
 

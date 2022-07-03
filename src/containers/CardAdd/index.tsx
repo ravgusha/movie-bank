@@ -1,4 +1,4 @@
-import CardAddForm from './components/CardAddForm/CardAddForm';
+import CardAddForm from './components/Form/Form';
 
 const CardAdd = () => {
   return (

@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { IState } from '../../../../redux/configureStore';
+import store from '../../../../redux/configureStore';
 import { sendSearchRequest } from '../../../../redux/movieSlice';
+import { IState } from '../../../../redux/types';
 
 import './Pagination.scss';
 
 const Pagination = () => {
-  const dispatch = useDispatch();
+  type AppDispatch = typeof store.dispatch;
+  const dispatch = useDispatch<AppDispatch>();
 
   const { currentPage, totalResults } = useSelector((state: IState) => state.movie);
 
