@@ -1,0 +1,128 @@
+@use '../../../../styles/variables' as variables;
+
+.add-form {
+  margin: 28px auto;
+  padding: 25px;
+  box-shadow: 0 0 7px 1px #d3d3d3;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  width: fit-content;
+
+  input {
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+    border: 0;
+    padding: 7px 0;
+    border-bottom: 1px solid #ccc;
+
+    &[type='checkbox'] {
+      margin-top: 7px;
+    }
+
+    &[type='submit'] {
+      background-color: variables.$main-color;
+      width: fit-content;
+      color: #fff;
+      padding: 10px 25px;
+      font-family: 'Montserrat', sans-serif;
+      align-self: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    &[type='submit']:disabled {
+      border: 1px solid #999999;
+      background-color: #ccc;
+      color: #666666;
+    }
+  }
+
+  div {
+    width: fit-content;
+
+    label {
+      font-size: 23px;
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+    .switch__title,
+    .genre__title {
+      font-size: 23px;
+      padding-right: 10px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: '';
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+    }
+
+    input:checked + .slider {
+      background-color: variables.$main-color;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px variables.$main-color;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(36px);
+    }
+
+    .slider.round {
+      border-radius: 34px;
+      width: 72px;
+      margin-left: 153px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    #fileUpload {
+      color: transparent;
+      border-bottom: 0;
+    }
+  }
+
+  .add-form__error {
+    color: red;
+    align-items: center;
+  }
+}
